@@ -100,5 +100,5 @@ class DBTrackTest(plugintest.PluginTestCase):
         self.assertEqual(models.GroupChat.select().count(), 1)
 
         # kicked out of group
-        self.receive_update(chat=chat1, left_chat_participant=dict(self.bot.tg._bot_user.__dict__))
+        self.receive_update(chat=chat1, left_chat_participant=dict(self.bot._bot_user.__dict__))
         self.assertEqual(models.GroupChat.select().count(), 0)

@@ -19,9 +19,9 @@ class TestPlugin(TGPluginBase):
 
     def echo_selective(self, bot, message, text):
         if text:
-            bot.tg.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
         else:
-            m = bot.tg.send_message(
+            m = bot.send_message(
                 message.chat.id,
                 'echo what?',
                 reply_to_message_id=message.message_id,
@@ -33,9 +33,9 @@ class TestPlugin(TGPluginBase):
 
     def echo(self, bot, message, text):
         if text:
-            bot.tg.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
         else:
-            m = bot.tg.send_message(
+            m = bot.send_message(
                 message.chat.id,
                 'echo what?',
                 reply_to_message_id=message.message_id,
@@ -47,37 +47,37 @@ class TestPlugin(TGPluginBase):
 
     def save(self, bot, message, text):
         if not text:
-            bot.tg.send_message(message.chat.id, 'Use it like: /save my note', reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, 'Use it like: /save my note', reply_to_message_id=message.message_id)
         else:
             # complexify note for test purposes
             self.save_data(message.chat.id, key2=message.sender.id, obj={
                 'note': text
             })
-            bot.tg.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
 
     def read(self, bot, message, text):
         note = self.read_data(message.chat.id, key2=message.sender.id)
         if note is None:
-            bot.tg.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
         else:
-            bot.tg.send_message(message.chat.id, 'your note: ' + note['note'], reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, 'your note: ' + note['note'], reply_to_message_id=message.message_id)
 
     def savegroup(self, bot, message, text):
         if not text:
-            bot.tg.send_message(message.chat.id, 'Use it like: /savegroup my note', reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, 'Use it like: /savegroup my note', reply_to_message_id=message.message_id)
         else:
             self.save_data(message.chat.id, obj=text)
-            bot.tg.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
 
     def readgroup(self, bot, message, text):
         note = self.read_data(message.chat.id)
         if note is None:
-            bot.tg.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
         else:
-            bot.tg.send_message(message.chat.id, 'this group note: ' + note, reply_to_message_id=message.message_id)
+            bot.send_message(message.chat.id, 'this group note: ' + note, reply_to_message_id=message.message_id)
 
     def prefixcmd(self, bot, message, text):
-        bot.tg.send_message(message.chat.id, text)
+        bot.send_message(message.chat.id, text)
 
 
 class TestPluginTest(plugintest.PluginTestCase):

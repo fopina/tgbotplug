@@ -1,4 +1,4 @@
-from twx.botapi import TelegramBot, Error, GroupChat
+from twx.botapi import *
 from . import models
 from .pluginbase import TGPluginBase, TGCommandBase
 from playhouse.db_url import connect
@@ -6,10 +6,10 @@ import peewee
 import sys
 
 
-class TGBot(object):
+class TGBot(TelegramBot):
     def __init__(self, token, plugins=[], no_command=None, db_url=None):
+        TelegramBot.__init__(self, token)
         self._token = token
-        self.tg = TelegramBot(token)
         self._last_id = None
         self.cmds = {}
         self.pcmds = {}
@@ -56,8 +56,8 @@ class TGBot(object):
 
     def update_bot_info(self):
         # re-implement update_bot_info to make it synchronous
-        if self.tg.username is None:
-            self.tg._bot_user = self.tg.get_me().wait()
+        if self.username is None:
+            self._bot_user = self.get_me().wait()
 
     def process_update(self, update):  # noqa not complex at all!
         self.update_bot_info()
@@ -72,7 +72,7 @@ class TGBot(object):
         except peewee.IntegrityError:
             pass  # ignore, already exists
 
-        if message.left_chat_participant is not None and message.left_chat_participant.username == self.tg.username:
+        if message.left_chat_participant is not None and message.left_chat_participant.username == self.username:
             models.GroupChat.delete().where(models.GroupChat.id == message.chat.id).execute()
         elif isinstance(message.chat, GroupChat):
             try:
@@ -131,10 +131,10 @@ class TGBot(object):
     def run(self, polling_time=2):
         from time import sleep
         # make sure all webhooks are disabled
-        self.tg.set_webhook().wait()
+        self.set_webhook().wait()
 
         while True:
-            ups = self.tg.get_updates(offset=self._last_id).wait()
+            ups = self.get_updates(offset=self._last_id).wait()
             if isinstance(ups, Error):
                 print 'Error: ', ups
             else:
@@ -149,7 +149,7 @@ class TGBot(object):
         url = hook_url
         if url[-1] != '/':
             url += '/'
-        self.tg.set_webhook(url + 'update/' + self._token)
+        self.set_webhook(url + 'update/' + self._token)
         run_server(self, **kwargs)
 
     def list_commands(self):
