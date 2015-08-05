@@ -7,16 +7,18 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
+__version__ = '1.0b'
+
 setup(
     name='tgbotplug',
-    version='1.0b',
+    version=__version__,
     packages=['tgbot'],
     include_package_data=True,
     license='MIT License',
     description='Telegram plugin-based bot',
     long_description=README,
     url='https://github.com/fopina/tgbotplug',
-    download_url='https://github.com/fopina/tgbotplug/archive/v0.1.15-alpha.tar.gz',
+    download_url='https://github.com/fopina/tgbotplug/archive/%s.tar.gz' % __version__,
     author='Filipe Pina',
     author_email='fopina@skmobi.com',
     classifiers=[
