@@ -9,13 +9,14 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='tgbotplug',
-    version='0.1.15',
+    version='1.0b',
     packages=['tgbot'],
     include_package_data=True,
     license='MIT License',
     description='Telegram plugin-based bot',
     long_description=README,
     url='https://github.com/fopina/tgbotplug',
+    download_url='https://github.com/fopina/tgbotplug/archive/v0.1.15-alpha.tar.gz',
     author='Filipe Pina',
     author_email='fopina@skmobi.com',
     classifiers=[
@@ -32,5 +33,6 @@ setup(
         'requests==2.7.0',
         'twx.botapi==1.0.2',
         'peewee==2.6.3',
-    ]
+    ],
+    keywords = ['telegram','bot']
 )
