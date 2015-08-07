@@ -80,7 +80,7 @@ class TGBot(TelegramBot):
             except peewee.IntegrityError:
                 pass
 
-        if message.new_chat_participant is not None and message.new_chat_participant != self.me:
+        if message.new_chat_participant is not None and message.new_chat_participant.username != self.username:
             try:
                 models.User.create(
                     id=message.new_chat_participant.id,

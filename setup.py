@@ -2,14 +2,14 @@ import os
 from setuptools import setup
 
 try:
-	README = open(os.path.join(os.path.dirname(__file__), 'README.txt')).read()
+    README = open(os.path.join(os.path.dirname(__file__), 'README.txt')).read()
 except:
-	README = ''
+    README = ''
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 
 setup(
     name='tgbotplug',
@@ -38,5 +38,5 @@ setup(
         'twx.botapi==1.0.2',
         'peewee==2.6.3',
     ],
-    keywords = ['telegram','bot']
+    keywords=['telegram', 'bot']
 )
