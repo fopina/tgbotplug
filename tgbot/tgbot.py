@@ -1,4 +1,4 @@
-from twx.botapi import *
+from twx.botapi import *  # noqa
 from . import models
 from .pluginbase import TGPluginBase, TGCommandBase
 from playhouse.db_url import connect
@@ -90,16 +90,6 @@ class TGBot(TelegramBot):
             except peewee.IntegrityError:
                 pass  # ignore, already exists
 
-        if message.contact is not None:
-            try:
-                models.User.create(
-                    id=message.contact.user_id,
-                    first_name=message.contact.first_name,
-                    last_name=message.contact.last_name,
-                )
-            except peewee.IntegrityError:
-                pass  # ignore, already exists
-
         if message.text is not None and message.text.startswith('/'):
             spl = message.text.find(' ')
 
@@ -108,7 +98,7 @@ class TGBot(TelegramBot):
                 text = ''
             else:
                 cmd = message.text[1:spl]
-                text = message.text[spl+1:]
+                text = message.text[spl + 1:]
 
             spl = cmd.find('@')
             if spl > -1:
