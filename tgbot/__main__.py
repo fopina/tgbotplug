@@ -13,8 +13,11 @@ def build_parser():
                         help='plugin.method to be used for non-command messages')
     parser.add_argument('--polling', '-p', dest='polling', type=int, default=2,
                         help='interval (in seconds) to check for message updates')
-    parser.add_argument('--db_url', '-d', dest='db_url',
+    parser.add_argument('--db-url', '-d', dest='db_url',
                         help='URL for database (default is in-memory sqlite)')
+    parser.add_argument('--create-db', dest='create_db', action='store_const',
+                        const=True, default=False,
+                        help='Create DB tables')
     parser.add_argument('--listcommands', '-l', dest='list', action='store_const',
                         const=True, default=False,
                         help='plugin method to be used for non-command messages (ex: plugins.simsimi.SimsimiPlugin.simsimi)')
@@ -55,6 +58,10 @@ def main():
 
     if args.list:
         tg.print_commands()
+        return
+
+    if args.create_db:
+        tg.setup_db()
         return
 
     if args.token is None:
