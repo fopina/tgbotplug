@@ -1,5 +1,4 @@
 from twx.botapi import GroupChat
-from . import models
 import json
 
 
@@ -19,6 +18,7 @@ class TGCommandBase(object):
 class TGPluginBase(object):
     def __init__(self):
         self.key_name = '%s.%s' % (self.__module__, self.__class__.__name__)
+        self.bot = None
 
     def list_commands(self):
         '''
@@ -33,13 +33,13 @@ class TGPluginBase(object):
         raise NotImplementedError('Abstract method, no_command plugins need to implement this')
 
     def need_reply(self, handler, in_message, out_message=None, selective=False):
-        sender = models.User.get(models.User.id == in_message.sender.id)
+        sender = self.bot.models.User.get(self.bot.models.User.id == in_message.sender.id)
 
         if isinstance(in_message.chat, GroupChat):
             try:
-                chat = models.GroupChat.get(models.GroupChat.id == in_message.chat.id)
-            except models.GroupChat.DoesNotExist:
-                chat = models.GroupChat.create(id=in_message.chat.id, title=in_message.chat.title)
+                chat = self.bot.models.GroupChat.get(self.bot.models.GroupChat.id == in_message.chat.id)
+            except self.bot.models.GroupChat.DoesNotExist:
+                chat = self.bot.models.GroupChat.create(id=in_message.chat.id, title=in_message.chat.title)
         elif in_message.chat.id == in_message.sender.id:
             chat = None
         else:
@@ -48,7 +48,7 @@ class TGPluginBase(object):
         if in_message.text is None:
             return
 
-        m = models.Message.create(
+        m = self.bot.models.Message.create(
             id=in_message.message_id,
             group_chat=chat,
             sender=sender,
@@ -64,22 +64,22 @@ class TGPluginBase(object):
 
     def clear_chat_replies(self, chat):
         if isinstance(chat, GroupChat):
-            models.Message.delete().where(models.Message.group_chat_id == chat.id)
+            self.bot.models.Message.delete().where(self.bot.models.Message.group_chat_id == chat.id)
         else:
-            models.Message.delete().where(models.Message.sender_id == chat.id)
+            self.bot.models.Message.delete().where(self.bot.models.Message.sender_id == chat.id)
 
     def iter_data_keys(self):
-        for d in models.PluginData.select(models.PluginData.k1).distinct(models.PluginData.k1).where(
-            models.PluginData.name == self.key_name,
-            models.PluginData.data != None,
+        for d in self.bot.models.PluginData.select(self.bot.models.PluginData.k1).distinct(self.bot.models.PluginData.k1).where(
+            self.bot.models.PluginData.name == self.key_name,
+            self.bot.models.PluginData.data is not None,
         ):
             yield d.k1
 
     def iter_data_key_keys(self, key1=None):
-        for d in models.PluginData.select(models.PluginData.k2).where(
-            models.PluginData.name == self.key_name,
-            models.PluginData.k1 == key1,
-            models.PluginData.data != None,
+        for d in self.bot.models.PluginData.select(self.bot.models.PluginData.k2).where(
+            self.bot.models.PluginData.name == self.key_name,
+            self.bot.models.PluginData.k1 == key1,
+            self.bot.models.PluginData.data is not None,
         ):
             yield d.k2
 
@@ -89,14 +89,14 @@ class TGPluginBase(object):
             json_obj = json.dumps(obj)
 
         try:
-            data = models.PluginData.get(
-                models.PluginData.name == self.key_name,
-                models.PluginData.k1 == key1,
-                models.PluginData.k2 == key2,
+            data = self.bot.models.PluginData.get(
+                self.bot.models.PluginData.name == self.key_name,
+                self.bot.models.PluginData.k1 == key1,
+                self.bot.models.PluginData.k2 == key2,
             )
             data.data = json_obj
-        except models.PluginData.DoesNotExist:
-            data = models.PluginData(
+        except self.bot.models.PluginData.DoesNotExist:
+            data = self.bot.models.PluginData(
                 name=self.key_name,
                 k1=key1,
                 k2=key2,
@@ -107,33 +107,33 @@ class TGPluginBase(object):
 
     def read_data(self, key1, key2=None):
         try:
-            data = models.PluginData.get(
-                models.PluginData.name == self.key_name,
-                models.PluginData.k1 == key1,
-                models.PluginData.k2 == key2
+            data = self.bot.models.PluginData.get(
+                self.bot.models.PluginData.name == self.key_name,
+                self.bot.models.PluginData.k1 == key1,
+                self.bot.models.PluginData.k2 == key2
             )
             if data.data is None:
                 return None
             return json.loads(data.data)
-        except models.PluginData.DoesNotExist:
+        except self.bot.models.PluginData.DoesNotExist:
             return None
 
     def is_expected(self, bot, message):  # noqa - not complex at all!
         msg = None
         if message.reply_to_message is not None:
             try:
-                msg = models.Message.get(
-                    models.Message.reply_id == message.reply_to_message.message_id,
-                    models.Message.reply_plugin == self.key_name,
+                msg = self.bot.models.Message.get(
+                    self.bot.models.Message.reply_id == message.reply_to_message.message_id,
+                    self.bot.models.Message.reply_plugin == self.key_name,
                 )
-            except models.Message.DoesNotExist:
+            except self.bot.models.Message.DoesNotExist:
                 return False
 
         if msg is None:
             if isinstance(message.chat, GroupChat):
-                msgs = models.Message.select().where(
-                    models.Message.group_chat == message.chat.id,
-                    models.Message.reply_plugin == self.key_name,
+                msgs = self.bot.models.Message.select().where(
+                    self.bot.models.Message.group_chat == message.chat.id,
+                    self.bot.models.Message.reply_plugin == self.key_name,
                 )
                 for m in msgs:
                     if not m.reply_selective:
@@ -144,11 +144,11 @@ class TGPluginBase(object):
                         break
             else:
                 try:
-                    msg = models.Message.get(
-                        models.Message.sender == message.chat.id,
-                        models.Message.reply_plugin == self.key_name,
+                    msg = self.bot.models.Message.get(
+                        self.bot.models.Message.sender == message.chat.id,
+                        self.bot.models.Message.reply_plugin == self.key_name,
                     )
-                except models.Message.DoesNotExist:
+                except self.bot.models.Message.DoesNotExist:
                     pass
 
         if msg is None:

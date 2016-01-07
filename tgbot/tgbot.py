@@ -1,5 +1,5 @@
 from twx.botapi import *  # noqa
-from . import models
+from . import database
 from .pluginbase import TGPluginBase, TGCommandBase
 from playhouse.db_url import connect
 import peewee
@@ -13,18 +13,24 @@ class TGBot(TelegramBot):
         self._last_id = None
         self.cmds = {}
         self.pcmds = {}
-        self._no_cmd = no_command
+        self._no_cmd = None
         self._msgs = {}
         self._plugins = plugins
 
         if no_command is not None:
             if not isinstance(no_command, TGPluginBase):
                 raise NotImplementedError('%s does not subclass tgbot.TGPluginBase' % type(no_command).__name__)
+            if no_command.bot is not None:
+                raise Exception('This instance of %s is already attached to other bot' % type(no_command).__name__)
+            self._no_cmd = no_command
+            self._no_cmd.bot = self
 
         for p in self._plugins:
-
             if not isinstance(p, TGPluginBase):
                 raise NotImplementedError('%s does not subclass tgbot.TGPluginBase' % type(p).__name__)
+            if p.bot is not None:
+                raise Exception('This instance of %s is already attached to other bot' % type(p).__name__)
+            p.bot = self
 
             for cmd in p.list_commands():
 
@@ -47,12 +53,12 @@ class TGBot(TelegramBot):
 
         if db_url is None:
             self.db = connect('sqlite:///:memory:')
-            models.database_proxy.initialize(self.db)
+            self.models = database.model_factory(self.db)
             self.setup_db()
         else:
             self.db = connect(db_url)
             self.db.autorollback = True
-            models.database_proxy.initialize(self.db)
+            self.models = database.model_factory(self.db)
 
     def update_bot_info(self):
         # re-implement update_bot_info to make it synchronous
@@ -64,7 +70,7 @@ class TGBot(TelegramBot):
         message = update.message
 
         try:
-            models.User.create(
+            self.models.User.create(
                 id=message.sender.id,
                 first_name=message.sender.first_name,
                 last_name=message.sender.last_name,
@@ -73,16 +79,16 @@ class TGBot(TelegramBot):
             pass  # ignore, already exists
 
         if message.left_chat_participant is not None and message.left_chat_participant.username == self.username:
-            models.GroupChat.delete().where(models.GroupChat.id == message.chat.id).execute()
+            self.models.GroupChat.delete().where(self.models.GroupChat.id == message.chat.id).execute()
         elif isinstance(message.chat, GroupChat):
             try:
-                models.GroupChat.create(id=message.chat.id, title=message.chat.title)
+                self.models.GroupChat.create(id=message.chat.id, title=message.chat.title)
             except peewee.IntegrityError:
                 pass
 
         if message.new_chat_participant is not None and message.new_chat_participant.username != self.username:
             try:
-                models.User.create(
+                self.models.User.create(
                     id=message.new_chat_participant.id,
                     first_name=message.new_chat_participant.first_name,
                     last_name=message.new_chat_participant.last_name,
@@ -116,23 +122,10 @@ class TGBot(TelegramBot):
                 self._no_cmd.chat(self, message, message.text)
 
     def setup_db(self):
-        models.create_tables(self.db)
+        database.create_tables(self.db, self.models)
 
     def run(self, polling_time=2):
-        from time import sleep
-        # make sure all webhooks are disabled
-        self.set_webhook().wait()
-
-        while True:
-            ups = self.get_updates(offset=self._last_id).wait()
-            if isinstance(ups, Error):
-                print 'Error: ', ups
-            else:
-                for up in ups:
-                    self.process_update(up)
-                    self._last_id = up.update_id + 1
-
-            sleep(polling_time)
+        run_bots([self])
 
     def run_web(self, hook_url, **kwargs):
         from .webserver import run_server
@@ -168,3 +161,23 @@ class TGBot(TelegramBot):
                         ntext += ' ' + text
                     self.pcmds[pcmd].method(self, message, ntext)
                     break
+
+
+def run_bots(bots, polling_time=2):
+    from time import sleep
+
+    # make sure all webhooks are disabled
+    for bot in bots:
+        bot.set_webhook().wait()
+
+    while True:
+        for bot in bots:
+            ups = bot.get_updates(offset=bot._last_id).wait()
+            if isinstance(ups, Error):
+                print 'Error: ', ups
+            else:
+                for up in ups:
+                    bot.process_update(up)
+                    bot._last_id = up.update_id + 1
+
+        sleep(polling_time)
