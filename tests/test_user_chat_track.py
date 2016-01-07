@@ -1,4 +1,4 @@
-from tgbot import plugintest, models
+from tgbot import plugintest
 from twx.botapi import Update, User
 
 
