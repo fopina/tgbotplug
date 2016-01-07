@@ -114,7 +114,7 @@ class TGBot(TelegramBot):
         else:
             was_expected = False
             for p in self._plugins:
-                was_expected = p.is_expected(self, message)
+                was_expected = p.is_expected(message)
                 if was_expected:
                     break
 
@@ -150,16 +150,16 @@ class TGBot(TelegramBot):
 
     def process(self, message, cmd, text):
         if cmd in self.cmds:
-            self.cmds[cmd].method(self, message, text)
+            self.cmds[cmd].method(message, text)
         elif cmd in self.pcmds:
-            self.pcmds[cmd].method(self, message, text)
+            self.pcmds[cmd].method(message, text)
         else:
             for pcmd in self.pcmds:
                 if cmd.startswith(pcmd):
                     ntext = cmd[len(pcmd):]
                     if text:
                         ntext += ' ' + text
-                    self.pcmds[pcmd].method(self, message, ntext)
+                    self.pcmds[pcmd].method(message, ntext)
                     break
 
 

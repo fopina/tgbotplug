@@ -26,7 +26,7 @@ class TGPluginBase(object):
         '''
         raise NotImplementedError('Abstract method')
 
-    def chat(self, bot, message, text):
+    def chat(self, message, text):
         '''
         this method will be called on plugins used with option no_command
         '''
@@ -118,7 +118,7 @@ class TGPluginBase(object):
         except self.bot.models.PluginData.DoesNotExist:
             return None
 
-    def is_expected(self, bot, message):  # noqa - not complex at all!
+    def is_expected(self, message):  # noqa - not complex at all!
         msg = None
         if message.reply_to_message is not None:
             try:
@@ -161,6 +161,6 @@ class TGPluginBase(object):
 
         msg.delete_instance()
 
-        handler(bot, message, message.text)
+        handler(message, message.text)
 
         return True

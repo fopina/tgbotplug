@@ -1,5 +1,4 @@
 import unittest
-from twx import botapi
 from . import TGBot
 from .tgbot import User, Message
 
