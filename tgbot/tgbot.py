@@ -119,7 +119,7 @@ class TGBot(TelegramBot):
                     break
 
             if self._no_cmd is not None and not was_expected:
-                self._no_cmd.chat(self, message, message.text)
+                self._no_cmd.chat(message, message.text)
 
     def setup_db(self):
         database.create_tables(self.db, self.models)
