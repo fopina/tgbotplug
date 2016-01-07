@@ -71,7 +71,7 @@ class TGPluginBase(object):
     def iter_data_keys(self):
         for d in self.bot.models.PluginData.select(self.bot.models.PluginData.k1).distinct(self.bot.models.PluginData.k1).where(
             self.bot.models.PluginData.name == self.key_name,
-            self.bot.models.PluginData.data is not None,
+            self.bot.models.PluginData.data != None,  # noqa: do not change to "is not", peewee operator
         ):
             yield d.k1
 
@@ -79,7 +79,7 @@ class TGPluginBase(object):
         for d in self.bot.models.PluginData.select(self.bot.models.PluginData.k2).where(
             self.bot.models.PluginData.name == self.key_name,
             self.bot.models.PluginData.k1 == key1,
-            self.bot.models.PluginData.data is not None,
+            self.bot.models.PluginData.data != None,  # noqa: do not change to "is not", peewee operator
         ):
             yield d.k2
 

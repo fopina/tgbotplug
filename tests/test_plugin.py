@@ -17,11 +17,11 @@ class TestPlugin(TGPluginBase):
             TGCommandBase('prefixcmd', self.prefixcmd, 'prefix cmd', prefix=True, printable=False),
         ]
 
-    def echo_selective(self, bot, message, text):
+    def echo_selective(self, message, text):
         if text:
-            bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
         else:
-            m = bot.send_message(
+            m = self.bot.send_message(
                 message.chat.id,
                 'echo what?',
                 reply_to_message_id=message.message_id,
@@ -31,11 +31,11 @@ class TestPlugin(TGPluginBase):
             ).wait()
             self.need_reply(self.echo_selective, message, out_message=m, selective=True)
 
-    def echo(self, bot, message, text):
+    def echo(self, message, text):
         if text:
-            bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
         else:
-            m = bot.send_message(
+            m = self.bot.send_message(
                 message.chat.id,
                 'echo what?',
                 reply_to_message_id=message.message_id,
@@ -45,39 +45,39 @@ class TestPlugin(TGPluginBase):
             ).wait()
             self.need_reply(self.echo, message, out_message=m, selective=False)
 
-    def save(self, bot, message, text):
+    def save(self, message, text):
         if not text:
-            bot.send_message(message.chat.id, 'Use it like: /save my note', reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, 'Use it like: /save my note', reply_to_message_id=message.message_id)
         else:
             # complexify note for test purposes
             self.save_data(message.chat.id, key2=message.sender.id, obj={
                 'note': text
             })
-            bot.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
 
-    def read(self, bot, message, text):
+    def read(self, message, text):
         note = self.read_data(message.chat.id, key2=message.sender.id)
         if note is None:
-            bot.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
         else:
-            bot.send_message(message.chat.id, 'your note: ' + note['note'], reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, 'your note: ' + note['note'], reply_to_message_id=message.message_id)
 
-    def savegroup(self, bot, message, text):
+    def savegroup(self, message, text):
         if not text:
-            bot.send_message(message.chat.id, 'Use it like: /savegroup my note', reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, 'Use it like: /savegroup my note', reply_to_message_id=message.message_id)
         else:
             self.save_data(message.chat.id, obj=text)
-            bot.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
 
-    def readgroup(self, bot, message, text):
+    def readgroup(self, message, text):
         note = self.read_data(message.chat.id)
         if note is None:
-            bot.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
         else:
-            bot.send_message(message.chat.id, 'this group note: ' + note, reply_to_message_id=message.message_id)
+            self.bot.send_message(message.chat.id, 'this group note: ' + note, reply_to_message_id=message.message_id)
 
-    def prefixcmd(self, bot, message, text):
-        bot.send_message(message.chat.id, text)
+    def prefixcmd(self, message, text):
+        self.bot.send_message(message.chat.id, text)
 
 
 class TestPluginTest(plugintest.PluginTestCase):
@@ -127,7 +127,7 @@ class TestPluginTest(plugintest.PluginTestCase):
         from cStringIO import StringIO
         out = StringIO()
         self.bot.print_commands(out=out)
-        self.assertEqual(out.getvalue(),'''\
+        self.assertEqual(out.getvalue(), '''\
 read - read a note
 echo - right back at ya
 readgroup - read a group note
@@ -280,10 +280,10 @@ save - save a note
             'title': 'test chat',
         }
 
-        self.receive_message('/save note1') # 1 1
-        self.receive_message('/save note2', sender=sender2) # 2 2
-        self.receive_message('/save note3', chat=chat1) # 3 1
-        self.receive_message('/save note4', sender=sender2, chat=chat1) # 3 2
+        self.receive_message('/save note1')  # 1 1
+        self.receive_message('/save note2', sender=sender2)  # 2 2
+        self.receive_message('/save note3', chat=chat1)  # 3 1
+        self.receive_message('/save note4', sender=sender2, chat=chat1)  # 3 2
 
         self.assertEqual(
             list(self.plugin.iter_data_keys()),
