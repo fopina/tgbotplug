@@ -4,8 +4,6 @@
 
 tgbotplug is meant to be an easy-to-extend telegram bot built around [twx.botapi](https://github.com/datamachine/twx.botapi).
 
-Plugin examples can be found in [tgbotplug-plugins](https://github.com/fopina/tgbotplug-plugins).
-
 Using tgbotplug, after choosing/developing your plugins, is as simple as:
 
 ```python
@@ -21,3 +19,9 @@ tgbot.TGBot(
 ```
 
 Plugins should inherit `tgbot.TGPluginBase`and implement `list_commands()` (and the methods mapped in its result).
+
+Plugin examples can be found in [tgbotplug-plugins](https://github.com/fopina/tgbotplug-plugins).
+
+Also, a few full bot examples (using webhooks and prepared to deploy in OpenShift):
+* [ButtieBot](https://github.com/fopina/tgbot-buttiebot)
+* [PriberamBot](https://github.com/fopina/tgbot-buttiebot)
