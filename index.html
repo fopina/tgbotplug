@@ -42,16 +42,33 @@ tgbot.TGBot(
   ],
 ).run()</pre></div>
 
+<h2>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<p><a href="https://travis-ci.org/fopina/tgbotplug"><img src="https://travis-ci.org/fopina/tgbotplug.svg" alt="Build Status"></a></p>
+
+<ol>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#virtuallife-examples">VirtualLife Examples</a></li>
+</ol>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
 <p>Plugins should inherit <code>tgbot.TGPluginBase</code>and implement <code>list_commands()</code> (and the methods mapped in its result).</p>
 
-<p>Plugin examples can be found in <a href="https://github.com/fopina/tgbotplug-plugins">tgbotplug-plugins</a>.</p>
+<p>Documentation is a bit scarse (<em>== None</em>) at the moment so please focus on the <a href="https://github.com/fopina/tgbotplug-plugins">plugin examples</a> and the <a href="#virtuallife-examples">VirtualLife Examples</a> for now!</p>
 
-<p>Also, a few full bot examples (using webhooks and prepared to deploy in OpenShift):</p>
+<h2>
+<a id="virtuallife-examples" class="anchor" href="#virtuallife-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>VirtualLife Examples</h2>
 
 <ul>
-<li><a href="https://github.com/fopina/tgbot-buttiebot">ButtieBot</a></li>
-<li><a href="https://github.com/fopina/tgbot-buttiebot">PriberamBot</a></li>
-<li><a href="https://github.com/pmpfl/indieshufflebot">IndieShuffleBot</a></li>
+<li>
+<a href="https://github.com/fopina/tgbot-buttiebot">PriberamBot</a> - uses webhooks, packaged for openshift</li>
+<li>
+<a href="https://github.com/fopina/tgbot-buttiebot">ButtieBot</a> - uses webhooks, sends photos, packaged for openshift</li>
+<li>
+<a href="https://github.com/pmpfl/indieshufflebot">IndieShuffleBot</a> - uses webhooks, sends audio, packaged for openshift</li>
 </ul>
       </section>
       <footer>
