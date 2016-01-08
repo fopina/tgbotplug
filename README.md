@@ -25,3 +25,4 @@ Plugin examples can be found in [tgbotplug-plugins](https://github.com/fopina/tg
 Also, a few full bot examples (using webhooks and prepared to deploy in OpenShift):
 * [ButtieBot](https://github.com/fopina/tgbot-buttiebot)
 * [PriberamBot](https://github.com/fopina/tgbot-buttiebot)
+* [IndieShuffleBot](https://github.com/pmpfl/indieshufflebot)
