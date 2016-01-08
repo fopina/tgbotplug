@@ -1,7 +1,3 @@
-# tgbotplug
-
-[![Build Status](https://travis-ci.org/fopina/tgbotplug.svg)](https://travis-ci.org/fopina/tgbotplug)
-
 tgbotplug is meant to be an easy-to-extend telegram bot built around [twx.botapi](https://github.com/datamachine/twx.botapi).
 
 Using tgbotplug, after choosing/developing your plugins, is as simple as:
@@ -18,11 +14,20 @@ tgbot.TGBot(
 ).run()
 ```
 
+## Overview
+[![Build Status](https://travis-ci.org/fopina/tgbotplug.svg)](https://travis-ci.org/fopina/tgbotplug)
+
+1. [Documentation](#documentation)
+2. [VirtualLife Examples](#virtuallife-examples)
+
+## Documentation
+
 Plugins should inherit `tgbot.TGPluginBase`and implement `list_commands()` (and the methods mapped in its result).
 
-Plugin examples can be found in [tgbotplug-plugins](https://github.com/fopina/tgbotplug-plugins).
+Documentation is a bit scarse (*== None*) at the moment so please focus on the [plugin examples](https://github.com/fopina/tgbotplug-plugins) and the [VirtualLife Examples](#virtuallife-examples) for now!
 
-Also, a few full bot examples (using webhooks and prepared to deploy in OpenShift):
-* [ButtieBot](https://github.com/fopina/tgbot-buttiebot)
-* [PriberamBot](https://github.com/fopina/tgbot-buttiebot)
-* [IndieShuffleBot](https://github.com/pmpfl/indieshufflebot)
+## VirtualLife Examples
+
+* [PriberamBot](https://github.com/fopina/tgbot-buttiebot) - uses webhooks, packaged for openshift
+* [ButtieBot](https://github.com/fopina/tgbot-buttiebot) - uses webhooks, sends photos, packaged for openshift
+* [IndieShuffleBot](https://github.com/pmpfl/indieshufflebot) - uses webhooks, sends audio, packaged for openshift
