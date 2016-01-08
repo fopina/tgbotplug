@@ -35,7 +35,7 @@ setup(
     ],
     install_requires=[
         'requests==2.7.0',
-        'twx.botapi==1.0.2',
+        'twx.botapi==2.0.1',
         'peewee==2.6.3',
     ],
     keywords=['telegram', 'bot']

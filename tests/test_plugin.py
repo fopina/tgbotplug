@@ -98,7 +98,8 @@ class TestPluginTest(plugintest.PluginTestCase):
             }
 
         if chat is None:
-            chat = sender
+            chat = {'type': 'private'}
+            chat.update(sender)
 
         reply_to_message = None
 
@@ -173,6 +174,7 @@ save - save a note
         chat = {
             'id': 1,
             'title': 'test group',
+            'type': 'group',
         }
         self.receive_message('/echo', chat=chat)
         self.assertReplied(self.bot, 'echo what?')
@@ -193,6 +195,7 @@ save - save a note
         chat = {
             'id': 1,
             'title': 'test group',
+            'type': 'group',
         }
 
         self.receive_message('/echo2', chat=chat)

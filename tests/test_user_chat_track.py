@@ -19,7 +19,8 @@ class DBTrackTest(plugintest.PluginTestCase):
             }
 
         if chat is None:
-            chat = sender
+            chat = {'type': 'private'}
+            chat.update(sender)
 
         reply_to_message = None
 
@@ -73,7 +74,11 @@ class DBTrackTest(plugintest.PluginTestCase):
         self.received_id += 1
 
     def test_track(self):
-        chat1 = {'id': 1, 'title': 'test chat'}
+        chat1 = {
+            'id': 1,
+            'title': 'test chat',
+            'type': 'group',
+        }
         sender2 = {
             'id': 2,
             'first_name': 'John',

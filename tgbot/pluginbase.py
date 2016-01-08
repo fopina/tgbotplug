@@ -1,4 +1,3 @@
-from twx.botapi import GroupChat
 import json
 
 
@@ -35,7 +34,7 @@ class TGPluginBase(object):
     def need_reply(self, handler, in_message, out_message=None, selective=False):
         sender = self.bot.models.User.get(self.bot.models.User.id == in_message.sender.id)
 
-        if isinstance(in_message.chat, GroupChat):
+        if in_message.chat.type == "group":
             try:
                 chat = self.bot.models.GroupChat.get(self.bot.models.GroupChat.id == in_message.chat.id)
             except self.bot.models.GroupChat.DoesNotExist:
@@ -63,7 +62,7 @@ class TGPluginBase(object):
             m.save()
 
     def clear_chat_replies(self, chat):
-        if isinstance(chat, GroupChat):
+        if chat.type == "group":
             self.bot.models.Message.delete().where(self.bot.models.Message.group_chat_id == chat.id)
         else:
             self.bot.models.Message.delete().where(self.bot.models.Message.sender_id == chat.id)
@@ -130,7 +129,7 @@ class TGPluginBase(object):
                 return False
 
         if msg is None:
-            if isinstance(message.chat, GroupChat):
+            if message.chat.type == "group":
                 msgs = self.bot.models.Message.select().where(
                     self.bot.models.Message.group_chat == message.chat.id,
                     self.bot.models.Message.reply_plugin == self.key_name,
