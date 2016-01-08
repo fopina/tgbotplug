@@ -1,3 +1,11 @@
+v1.2
+======
+
+* Quicky and dirty upgrade to twx.botapi 2.0.1 to include inline stuff and file downloading. Even though it was a major upgrade to twx.botapi (they changed a few classes), I'm keeping it as a minor upgrade as there was no database impact for tgbotplug. In the future there should be a v2.0 that will have the database revisited
+
+Impact:
+* Review the code where you access twx.botapi.GroupChat directly (in case you do). There's a new parameter to distinguish chat types (Chat.type) instead of using isinstance()
+
 v1.1
 ======
 
