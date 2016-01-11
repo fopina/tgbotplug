@@ -36,6 +36,7 @@ setup(
     install_requires=[
         'requests==2.7.0',
         'peewee==2.6.3',
+        'enum==0.4.6',
     ],
     keywords=['telegram', 'bot']
 )
