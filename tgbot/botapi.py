@@ -1765,7 +1765,7 @@ def answer_inline_query(inline_query_id, results, cache_time=None, is_personal=N
         )
     )
 
-    return TelegramBotRPCRequest('answerInlineQuery', params=params, on_result=Message.from_result, **kwargs)
+    return TelegramBotRPCRequest('answerInlineQuery', params=params, **kwargs)
 
 
 def get_user_profile_photos(user_id,
