@@ -1,5 +1,5 @@
 from tgbot import plugintest, TGPluginBase, TGCommandBase
-from twx.botapi import Update, ForceReply
+from tgbot.botapi import Update, ForceReply
 
 
 class TestPlugin(TGPluginBase):

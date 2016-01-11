@@ -1,5 +1,5 @@
 from tgbot import plugintest
-from twx.botapi import Update, User
+from tgbot.botapi import Update, User
 
 
 class DBTrackTest(plugintest.PluginTestCase):

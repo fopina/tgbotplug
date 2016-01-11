@@ -1,4 +1,4 @@
-from twx.botapi import *  # noqa
+from .botapi import *  # noqa
 from . import database
 from .pluginbase import TGPluginBase, TGCommandBase
 from playhouse.db_url import connect
@@ -7,23 +7,32 @@ import sys
 
 
 class TGBot(TelegramBot):
-    def __init__(self, token, plugins=[], no_command=None, db_url=None):
+    def __init__(self, token, plugins=[], no_command=None, inline_query=None, db_url=None):
         TelegramBot.__init__(self, token)
         self._token = token
         self._last_id = None
         self.cmds = {}
         self.pcmds = {}
         self._no_cmd = None
+        self._inline_query = None
         self._msgs = {}
         self._plugins = plugins
 
         if no_command is not None:
             if not isinstance(no_command, TGPluginBase):
                 raise NotImplementedError('%s does not subclass tgbot.TGPluginBase' % type(no_command).__name__)
-            if no_command.bot is not None:
+            if no_command.bot is not None and no_command.bot != self:
                 raise Exception('This instance of %s is already attached to other bot' % type(no_command).__name__)
             self._no_cmd = no_command
             self._no_cmd.bot = self
+
+        if inline_query is not None:
+            if not isinstance(no_command, TGPluginBase):
+                raise NotImplementedError('%s does not subclass tgbot.TGPluginBase' % type(inline_query).__name__)
+            if inline_query.bot is not None and inline_query.bot != self:
+                raise Exception('This instance of %s is already attached to other bot' % type(inline_query).__name__)
+            self._inline_query = no_command
+            self._inline_query.bot = self
 
         for p in self._plugins:
             if not isinstance(p, TGPluginBase):
@@ -67,8 +76,14 @@ class TGBot(TelegramBot):
 
     def process_update(self, update):  # noqa not complex at all!
         self.update_bot_info()
-        message = update.message
+        print update
+        if update.message:
+            self.process_update_db(update.message)
+            self.process_message(update.message)
+        if update.inline_query and self._inline_query is not None:
+            self._inline_query.inline_query(update.inline_query)
 
+    def process_update_db(self, message):
         try:
             self.models.User.create(
                 id=message.sender.id,
@@ -96,6 +111,7 @@ class TGBot(TelegramBot):
             except peewee.IntegrityError:
                 pass  # ignore, already exists
 
+    def process_message(self, message):
         if message.text is not None and message.text.startswith('/'):
             spl = message.text.find(' ')
 

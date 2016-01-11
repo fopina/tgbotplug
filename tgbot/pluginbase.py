@@ -27,9 +27,15 @@ class TGPluginBase(object):
 
     def chat(self, message, text):
         '''
-        this method will be called on plugins used with option no_command
+        this method will be called on plugins used in the option no_command
         '''
-        raise NotImplementedError('Abstract method, no_command plugins need to implement this')
+        raise NotImplementedError('Abstract method, no_command plugins need to implement this method')
+
+    def inline_query(self, inline_query):
+        '''
+        this method will be called on plugins used in the option inline_query
+        '''
+        raise NotImplementedError('Abstract method, inline_query plugins need to implement this method')
 
     def need_reply(self, handler, in_message, out_message=None, selective=False):
         sender = self.bot.models.User.get(self.bot.models.User.id == in_message.sender.id)

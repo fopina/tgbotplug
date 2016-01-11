@@ -1,5 +1,5 @@
 from bottle import route, run, request, abort
-from twx.botapi import Update
+from botapi import Update
 
 tg_bot = None
 
