@@ -76,7 +76,6 @@ class TGBot(TelegramBot):
 
     def process_update(self, update):  # noqa not complex at all!
         self.update_bot_info()
-        print update
         if update.message:
             self.process_update_db(update.message)
             self.process_message(update.message)
