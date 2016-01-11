@@ -1,3 +1,9 @@
+v1.2.2
+======
+
+* Imported twx.botapi code (leaving proper credits and references) to make it easier to maintain
+* Added support for inline_query plugins
+
 v1.2
 ======
 
