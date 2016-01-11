@@ -139,6 +139,10 @@ class TGBot(TelegramBot):
     def setup_db(self):
         database.create_tables(self.db, self.models)
 
+    def migrate_db(self):
+        import database_migrations
+        database_migrations.migrate(self.db)
+
     def run(self, polling_time=2):
         run_bots([self])
 

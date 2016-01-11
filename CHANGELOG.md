@@ -1,3 +1,12 @@
+v1.2.4
+======
+
+* Add username to User model
+* Added NOT NULL to User.last_name as it is optional after all
+
+Impact:
+* For existing databases, please execute `python -m tgbot -d EXISTING_DATABASE_URL --migrate-db` to update the User table
+
 v1.2.2
 ======
 

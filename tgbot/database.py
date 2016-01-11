@@ -17,7 +17,8 @@ def model_factory(db):
     class User(BotModel):
         id = IntegerField(primary_key=True)
         first_name = CharField()
-        last_name = CharField()
+        last_name = CharField(null=True)
+        username = CharField(null=True)
 
     class Message(BotModel):
         id = IntegerField(primary_key=True)
