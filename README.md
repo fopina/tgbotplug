@@ -28,6 +28,6 @@ Documentation is a bit scarse (*== None*) at the moment so please focus on the [
 
 ## VirtualLife Examples
 
-* [PriberamBot](https://github.com/fopina/tgbot-buttiebot) - uses webhooks, packaged for openshift
-* [ButtieBot](https://github.com/fopina/tgbot-buttiebot) - uses webhooks, sends photos, packaged for openshift
-* [IndieShuffleBot](https://github.com/pmpfl/indieshufflebot) - uses webhooks, sends audio, packaged for openshift
+* [PriberamBot](https://github.com/fopina/tgbot-buttiebot) - uses webhooks, packaged for Heroku
+* [ButtieBot](https://github.com/fopina/tgbot-buttiebot) - uses webhooks, sends photos, packaged for OpenShift
+* [IndieShuffleBot](https://github.com/pmpfl/indieshufflebot) - uses webhooks, sends audio, packaged for OpenShift
