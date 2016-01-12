@@ -11,7 +11,7 @@ def build_parser():
                         help='bot token provided by @BotFather')
     parser.add_argument('--nocommand', '-n', dest='nocmd',
                         help='plugin.method to be used for non-command messages')
-    parser.add_argument('--polling', '-p', dest='polling', type=int, default=2,
+    parser.add_argument('--polling', '-p', dest='polling', type=float, default=2,
                         help='interval (in seconds) to check for message updates')
     parser.add_argument('--db-url', '-d', dest='db_url',
                         help='URL for database (default is in-memory sqlite)')
