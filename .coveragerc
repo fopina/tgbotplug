@@ -1,3 +1,4 @@
 [report]
 omit =
     tgbot/botapi.py
+    tgbot/__main__.py
