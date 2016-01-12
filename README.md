@@ -15,7 +15,7 @@ tgbot.TGBot(
 ```
 
 ## Overview
-[![Build Status](https://travis-ci.org/fopina/tgbotplug.svg)](https://travis-ci.org/fopina/tgbotplug)
+[![PyPI version](https://badge.fury.io/py/tgbotplug.svg)](https://badge.fury.io/py/tgbotplug) [![Build Status](https://travis-ci.org/fopina/tgbotplug.svg)](https://travis-ci.org/fopina/tgbotplug)
 
 1. [Documentation](#documentation)
 2. [VirtualLife Examples](#virtuallife-examples)
