@@ -9,7 +9,7 @@ except:
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
-__version__ = '1.2.4'
+__version__ = '1.2.5'
 
 setup(
     name='tgbotplug',
