@@ -1,5 +1,4 @@
-from tgbot import plugintest, TGPluginBase, TGCommandBase
-from tgbot.botapi import Update, ForceReply
+from tgbot import plugintest
 from webtest import TestApp
 from webtest.app import AppError
 
@@ -13,9 +12,6 @@ class WebserverTest(plugintest.PluginTestCase):
         self.webapp = TestApp(wsgi_app([self.bot]))
 
     def test_ping(self):
-        print self.bot.token
-        self.bot.token = '321'
-        print self.bot.token
         self.assertEqual(self.webapp.get('/ping/').text, '<b>Pong!</b>')
 
     def test_update_invalid_method(self):
