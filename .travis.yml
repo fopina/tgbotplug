@@ -3,7 +3,7 @@ python:
   - 2.7
 install:
   - pip install .
-  - pip install webtest coveralls
+  - pip install bottle webtest coveralls
 script:
   - nosetests --with-coverage --cover-package=tgbot
 after_success: coveralls
