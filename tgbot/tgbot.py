@@ -9,7 +9,6 @@ import sys
 class TGBot(TelegramBot):
     def __init__(self, token, plugins=[], no_command=None, inline_query=None, db_url=None):
         TelegramBot.__init__(self, token)
-        self._token = token
         self._last_id = None
         self.cmds = {}
         self.pcmds = {}
@@ -151,8 +150,8 @@ class TGBot(TelegramBot):
         url = hook_url
         if url[-1] != '/':
             url += '/'
-        self.set_webhook(url + 'update/' + self._token)
-        run_server(self, **kwargs)
+        self.set_webhook(url + 'update/' + self.token)
+        run_server([self], **kwargs)
 
     def list_commands(self):
         return self.cmds.values() + self.pcmds.values()
