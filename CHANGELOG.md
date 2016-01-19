@@ -1,3 +1,7 @@
+v1.2.6
+======
+* Quick fix for plugin re-attachment to the same bot instance
+
 v1.2.5
 ======
 * Modified webserver to support multiple bots (as polling already did), you can now call tgbot.webserver.run_server() with an array of bots instead of a single bot instance
