@@ -36,7 +36,7 @@ class TGBot(TelegramBot):
         for p in self._plugins:
             if not isinstance(p, TGPluginBase):
                 raise NotImplementedError('%s does not subclass tgbot.TGPluginBase' % type(p).__name__)
-            if p.bot is not None:
+            if p.bot is not None and p.bot != self:
                 raise Exception('This instance of %s is already attached to other bot' % type(p).__name__)
             p.bot = self
 
