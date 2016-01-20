@@ -2,6 +2,7 @@ from .botapi import *  # noqa
 from . import database
 from .pluginbase import TGPluginBase, TGCommandBase
 from playhouse.db_url import connect
+from collections import OrderedDict
 import peewee
 import sys
 
@@ -10,7 +11,7 @@ class TGBot(TelegramBot):
     def __init__(self, token, plugins=[], no_command=None, inline_query=None, db_url=None):
         TelegramBot.__init__(self, token)
         self._last_id = None
-        self.cmds = {}
+        self.cmds = OrderedDict()
         self.pcmds = {}
         self._no_cmd = None
         self._inline_query = None

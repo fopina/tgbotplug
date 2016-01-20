@@ -129,12 +129,12 @@ class TestPluginTest(plugintest.PluginTestCase):
         out = StringIO()
         self.bot.print_commands(out=out)
         self.assertEqual(out.getvalue(), '''\
-read - read a note
 echo - right back at ya
-readgroup - read a group note
-savegroup - save a group note
 echo2 - right back at ya
 save - save a note
+read - read a note
+savegroup - save a group note
+readgroup - read a group note
 ''')
 
     def test_reply(self):
