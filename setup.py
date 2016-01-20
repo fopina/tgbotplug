@@ -1,4 +1,5 @@
 import os
+import re
 from setuptools import setup
 
 try:
@@ -9,7 +10,16 @@ except:
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
-__version__ = '1.2.6'
+__version__ = ''
+with open('tgbot/__init__.py', 'r') as fd:
+    __version__ = re.search(
+        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+        fd.read(),
+        re.MULTILINE
+    ).group(1)
+
+if not __version__:
+    raise RuntimeError('Cannot find version information')
 
 setup(
     name='tgbotplug',
