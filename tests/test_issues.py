@@ -22,6 +22,8 @@ class TestPluginTest(plugintest.PluginTestCase):
         self.receive_message('test', sender=sender)
         self.assertEqual(self.bot.models.User.get(self.bot.models.User.id == 1).first_name, 'John')
 
+        self.receive_message('test', sender=sender)
+
         sender['first_name'] = 'Paul'
         self.receive_message('test', sender=sender)
         self.assertEqual(self.bot.models.User.get(self.bot.models.User.id == 1).first_name, 'Paul')

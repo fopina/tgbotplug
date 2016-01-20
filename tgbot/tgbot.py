@@ -83,14 +83,12 @@ class TGBot(TelegramBot):
             self._inline_query.inline_query(update.inline_query)
 
     def process_update_db(self, message):
-        try:
-            self.models.User.create(
-                id=message.sender.id,
-                first_name=message.sender.first_name,
-                last_name=message.sender.last_name,
-            )
-        except peewee.IntegrityError:
-            pass  # ignore, already exists
+        self.models.User.update_or_create(
+            id=message.sender.id,
+            first_name=message.sender.first_name,
+            last_name=message.sender.last_name,
+            username=message.sender.username,
+        )
 
         if message.left_chat_participant is not None and message.left_chat_participant.username == self.username:
             self.models.GroupChat.delete().where(self.models.GroupChat.id == message.chat.id).execute()
@@ -101,14 +99,12 @@ class TGBot(TelegramBot):
                 pass
 
         if message.new_chat_participant is not None and message.new_chat_participant.username != self.username:
-            try:
-                self.models.User.create(
-                    id=message.new_chat_participant.id,
-                    first_name=message.new_chat_participant.first_name,
-                    last_name=message.new_chat_participant.last_name,
-                )
-            except peewee.IntegrityError:
-                pass  # ignore, already exists
+            self.models.User.update_or_create(
+                id=message.new_chat_participant.id,
+                first_name=message.new_chat_participant.first_name,
+                last_name=message.new_chat_participant.last_name,
+                username=message.new_chat_participant.username,
+            )
 
     def process_message(self, message):
         if message.text is not None and message.text.startswith('/'):
