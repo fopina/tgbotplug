@@ -53,7 +53,8 @@ class TGPluginBase(object):
         if in_message.text is None:
             return
 
-        m = self.bot.models.Message.create(
+        # TODO: revisit this once duplicate incoming messages are dealt with (in issue #25)
+        m, _ = self.bot.models.Message.create_or_get(
             id=in_message.message_id,
             group_chat=chat,
             sender=sender,
