@@ -63,6 +63,17 @@ class IssuesTest(plugintest.PluginTestCase):
         self.receive_message('', chat=chat, left_chat_participant=self.bot._bot_user.__dict__)
         self.assertEqual(self.bot.models.Message.select().count(), 0)
 
+    def test_need_reply_twice(self):
+        """Test need_reply for the duplicate incoming message (issue #23)"""
+        # trigger first need_reply
+        self.receive_message('/echo')
+        self.assertEqual(self.bot.models.Message.select().count(), 1)
+
+        # trigger second need_reply with same id
+        self.received_id -= 1
+        self.receive_message('/echo')
+        self.assertEqual(self.bot.models.Message.select().count(), 1)
+
     def receive_message(self, text, sender=None, chat=None, reply_to_message_id=None, left_chat_participant=None):
         if sender is None:
             sender = {
