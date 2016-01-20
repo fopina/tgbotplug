@@ -1,3 +1,8 @@
+v1.2.x
+======
+* Bug fix to allow existing User instances to be updated (instead of ignored) - issue #22
+* `print_commands` now lists commands in the same order they are declared in `list_commands` - issue #18
+
 v1.2.6
 ======
 * Quick fix for plugin re-attachment to the same bot instance
