@@ -3,7 +3,7 @@ from tgbot.botapi import Update
 from test_plugin import TestPlugin
 
 
-class TestPluginTest(plugintest.PluginTestCase):
+class IssuesTest(plugintest.PluginTestCase):
     def setUp(self):
         self.plugin = TestPlugin()
         self.bot = self.fake_bot(
@@ -13,7 +13,7 @@ class TestPluginTest(plugintest.PluginTestCase):
         self.received_id = 1
 
     def test_user_update(self):
-        """Test for issue #22"""
+        """Update user information (issue #22)"""
         sender = {
             'id': 1,
             'first_name': 'John',
@@ -28,7 +28,26 @@ class TestPluginTest(plugintest.PluginTestCase):
         self.receive_message('test', sender=sender)
         self.assertEqual(self.bot.models.User.get(self.bot.models.User.id == 1).first_name, 'Paul')
 
-    def receive_message(self, text, sender=None, chat=None, reply_to_message_id=None):
+    def test_group_delete_with_message(self):
+        """Delete GroupChat with pending messages (issue #24)"""
+        chat = {
+            'id': -1,
+            'title': 'Test Group',
+            'type': 'group'
+        }
+        self.receive_message('test', chat=chat)
+        self.assertEqual(self.bot.models.User.get(self.bot.models.User.id == 1).first_name, 'John')
+        self.assertEqual(self.bot.models.GroupChat.get(self.bot.models.GroupChat.id == -1).title, 'Test Group')
+        self.assertEqual(self.bot.models.Message.select().count(), 0)
+
+        # trigger need_reply
+        self.receive_message('/echo', chat=chat)
+        self.assertEqual(self.bot.models.Message.select().first().group_chat.id, -1)
+
+        self.receive_message('', chat=chat, left_chat_participant=self.bot._bot_user.__dict__)
+        self.assertEqual(self.bot.models.Message.select().count(), 0)
+
+    def receive_message(self, text, sender=None, chat=None, reply_to_message_id=None, left_chat_participant=None):
         if sender is None:
             sender = {
                 'id': 1,
@@ -57,6 +76,7 @@ class TestPluginTest(plugintest.PluginTestCase):
                     'chat': chat,
                     'from': sender,
                     'reply_to_message': reply_to_message,
+                    'left_chat_participant': left_chat_participant,
                 }
             })
         )

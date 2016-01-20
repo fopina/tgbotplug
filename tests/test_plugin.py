@@ -40,7 +40,7 @@ class TestPlugin(TGPluginBase):
                 'echo what?',
                 reply_to_message_id=message.message_id,
                 reply_markup=ForceReply.create(
-                    selective=True
+                    selective=False
                 )
             ).wait()
             self.need_reply(self.echo, message, out_message=m, selective=False)
