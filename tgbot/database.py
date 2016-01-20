@@ -7,6 +7,23 @@ import datetime
 
 def model_factory(db):
     class BotModel(Model):
+        @classmethod
+        def update_or_create(cls, id, **kwargs):
+            obj, created = cls.get_or_create(
+                id=id,
+                defaults=kwargs
+            )
+
+            if not created:
+                # carefully update fields, we don't want to leave anything dirty without need
+                for fn, fv in kwargs.items():
+                    field = cls._meta.fields.get(fn)
+                    if field and not field.primary_key and getattr(obj, fn) != fv:
+                        setattr(obj, fn, fv)
+                obj.save()
+
+            return obj
+
         class Meta:
             database = db
             only_save_dirty = True
@@ -20,23 +37,6 @@ def model_factory(db):
         first_name = CharField()
         last_name = CharField(null=True)
         username = CharField(null=True)
-
-        @classmethod
-        def update_or_create(cls, id, **kwargs):
-            user, created = cls.get_or_create(
-                id=id,
-                defaults=kwargs
-            )
-
-            if not created:
-                # carefully update fields, we don't want to leave anything dirty without need
-                for fn, fv in kwargs.items():
-                    field = cls._meta.fields.get(fn)
-                    if field and not field.primary_key and getattr(user, fn) != fv:
-                        setattr(user, fn, fv)
-                user.save()
-
-            return user
 
     class Message(BotModel):
         id = IntegerField(primary_key=True)

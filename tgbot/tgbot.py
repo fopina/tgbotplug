@@ -96,10 +96,7 @@ class TGBot(TelegramBot):
             self.models.Message.delete().where(self.models.Message.group_chat == message.chat.id).execute()
             self.models.GroupChat.delete().where(self.models.GroupChat.id == message.chat.id).execute()
         elif message.chat.type == "group":
-            try:
-                self.models.GroupChat.create(id=message.chat.id, title=message.chat.title)
-            except peewee.IntegrityError:
-                pass
+            self.models.GroupChat.update_or_create(id=message.chat.id, title=message.chat.title)
 
         if message.new_chat_participant is not None and message.new_chat_participant.username != self.username:
             self.models.User.update_or_create(

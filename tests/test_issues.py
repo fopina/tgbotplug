@@ -28,6 +28,22 @@ class IssuesTest(plugintest.PluginTestCase):
         self.receive_message('test', sender=sender)
         self.assertEqual(self.bot.models.User.get(self.bot.models.User.id == 1).first_name, 'Paul')
 
+    def test_group_update(self):
+        """Update group information (bonus for issue #22)"""
+        chat = {
+            'id': -1,
+            'title': 'Test Group',
+            'type': 'group'
+        }
+        self.receive_message('test', chat=chat)
+        self.assertEqual(self.bot.models.User.get(self.bot.models.User.id == 1).first_name, 'John')
+        self.assertEqual(self.bot.models.GroupChat.get(self.bot.models.GroupChat.id == -1).title, 'Test Group')
+
+        chat['title'] = 'Test Crew'
+        self.receive_message('test', chat=chat)
+        self.assertEqual(self.bot.models.User.get(self.bot.models.User.id == 1).first_name, 'John')
+        self.assertEqual(self.bot.models.GroupChat.get(self.bot.models.GroupChat.id == -1).title, 'Test Crew')
+
     def test_group_delete_with_message(self):
         """Delete GroupChat with pending messages (issue #24)"""
         chat = {
