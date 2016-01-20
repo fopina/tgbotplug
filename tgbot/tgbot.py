@@ -91,6 +91,9 @@ class TGBot(TelegramBot):
         )
 
         if message.left_chat_participant is not None and message.left_chat_participant.username == self.username:
+            # TODO: set group_chat ForeignKeyField on_delete to CASCADE and enable PRAGMA FOREIGN_KEYS on every sqlite connection
+            # for now, "cascade" manually...
+            self.models.Message.delete().where(self.models.Message.group_chat == message.chat.id).execute()
             self.models.GroupChat.delete().where(self.models.GroupChat.id == message.chat.id).execute()
         elif message.chat.type == "group":
             try:
