@@ -1,6 +1,6 @@
 from tgbot import plugintest
 from tgbot.botapi import Update, Message
-from test_plugin import TestPlugin
+from sample_plugin import TestPlugin
 
 
 class IssuesTest(plugintest.PluginTestCase):
@@ -70,8 +70,7 @@ class IssuesTest(plugintest.PluginTestCase):
         self.assertEqual(self.bot.models.Message.select().count(), 1)
 
         # trigger second need_reply with same id
-        self.received_id -= 1
-        self.receive_message('/echo')
+        self.receive_message('/echo', message_id=1)
         self.assertEqual(self.bot.models.Message.select().count(), 1)
 
     def test_need_reply_validation(self):
@@ -81,39 +80,3 @@ class IssuesTest(plugintest.PluginTestCase):
 
         with self.assertRaisesRegexp(Exception, 'out_message must be instance of Message'):
             self.plugin.need_reply(None, Message.from_result({}), out_message='str')
-
-    def receive_message(self, text, sender=None, chat=None, reply_to_message_id=None, left_chat_participant=None):
-        if sender is None:
-            sender = {
-                'id': 1,
-                'first_name': 'John',
-                'last_name': 'Doe',
-            }
-
-        if chat is None:
-            chat = {'type': 'private'}
-            chat.update(sender)
-
-        reply_to_message = None
-
-        if reply_to_message_id is not None:
-            reply_to_message = {
-                'message_id': reply_to_message_id,
-                'chat': chat,
-            }
-
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': self.received_id,
-                'message': {
-                    'message_id': self.received_id,
-                    'text': text,
-                    'chat': chat,
-                    'from': sender,
-                    'reply_to_message': reply_to_message,
-                    'left_chat_participant': left_chat_participant,
-                }
-            })
-        )
-
-        self.received_id += 1

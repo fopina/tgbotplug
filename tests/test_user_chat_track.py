@@ -4,74 +4,7 @@ from tgbot.botapi import Update, User
 
 class DBTrackTest(plugintest.PluginTestCase):
     def setUp(self):
-        self.bot = self.fake_bot(
-            '',
-            me=User(99, 'Test', 'Bot', 'test_bot'),
-        )
-        self.received_id = 1
-
-    def receive_message(self, text, sender=None, chat=None, reply_to_message_id=None):
-        if sender is None:
-            sender = {
-                'id': 1,
-                'first_name': 'John',
-                'last_name': 'Doe',
-            }
-
-        if chat is None:
-            chat = {'type': 'private'}
-            chat.update(sender)
-
-        reply_to_message = None
-
-        if reply_to_message_id is not None:
-            reply_to_message = {
-                'message_id': reply_to_message_id,
-                'chat': chat,
-            }
-
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': self.received_id,
-                'message': {
-                    'message_id': self.received_id,
-                    'text': text,
-                    'chat': chat,
-                    'from': sender,
-                    'reply_to_message': reply_to_message,
-                }
-            })
-        )
-
-        self.received_id += 1
-
-    def receive_update(self, sender=None, chat=None, left_chat_participant=None, new_chat_participant=None, group_chat_created=False):
-        if sender is None:
-            sender = {
-                'id': 1,
-                'first_name': 'John',
-                'last_name': 'Doe',
-            }
-
-        if chat is None:
-            chat = sender
-
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': self.received_id,
-                'message': {
-                    'message_id': self.received_id,
-                    'text': None,
-                    'chat': chat,
-                    'from': sender,
-                    'left_chat_participant': left_chat_participant,
-                    'new_chat_participant': new_chat_participant,
-                    'group_chat_created': group_chat_created,
-                }
-            })
-        )
-
-        self.received_id += 1
+        self.bot = self.fake_bot('')
 
     def test_track(self):
         chat1 = {
@@ -105,5 +38,5 @@ class DBTrackTest(plugintest.PluginTestCase):
         self.assertEqual(self.bot.models.GroupChat.select().count(), 1)
 
         # kicked out of group
-        self.receive_update(chat=chat1, left_chat_participant=dict(self.bot._bot_user.__dict__))
+        self.receive_message(chat=chat1, left_chat_participant=dict(self.bot._bot_user.__dict__))
         self.assertEqual(self.bot.models.GroupChat.select().count(), 0)

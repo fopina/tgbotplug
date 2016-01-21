@@ -1,83 +1,5 @@
-from tgbot import plugintest, TGPluginBase, TGCommandBase
-from tgbot.botapi import Update, ForceReply
-
-
-class TestPlugin(TGPluginBase):
-    def chat(self, bot, message, text):
-        pass
-
-    def list_commands(self):
-        return [
-            TGCommandBase('echo', self.echo, 'right back at ya'),
-            TGCommandBase('echo2', self.echo_selective, 'right back at ya'),
-            TGCommandBase('save', self.save, 'save a note'),
-            TGCommandBase('read', self.read, 'read a note'),
-            TGCommandBase('savegroup', self.savegroup, 'save a group note'),
-            TGCommandBase('readgroup', self.readgroup, 'read a group note'),
-            TGCommandBase('prefixcmd', self.prefixcmd, 'prefix cmd', prefix=True, printable=False),
-        ]
-
-    def echo_selective(self, message, text):
-        if text:
-            self.bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
-        else:
-            m = self.bot.send_message(
-                message.chat.id,
-                'echo what?',
-                reply_to_message_id=message.message_id,
-                reply_markup=ForceReply.create(
-                    selective=True
-                )
-            ).wait()
-            self.need_reply(self.echo_selective, message, out_message=m, selective=True)
-
-    def echo(self, message, text):
-        if text:
-            self.bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
-        else:
-            m = self.bot.send_message(
-                message.chat.id,
-                'echo what?',
-                reply_to_message_id=message.message_id,
-                reply_markup=ForceReply.create(
-                    selective=False
-                )
-            ).wait()
-            self.need_reply(self.echo, message, out_message=m, selective=False)
-
-    def save(self, message, text):
-        if not text:
-            self.bot.send_message(message.chat.id, 'Use it like: /save my note', reply_to_message_id=message.message_id)
-        else:
-            # complexify note for test purposes
-            self.save_data(message.chat.id, key2=message.sender.id, obj={
-                'note': text
-            })
-            self.bot.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
-
-    def read(self, message, text):
-        note = self.read_data(message.chat.id, key2=message.sender.id)
-        if note is None:
-            self.bot.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
-        else:
-            self.bot.send_message(message.chat.id, 'your note: ' + note['note'], reply_to_message_id=message.message_id)
-
-    def savegroup(self, message, text):
-        if not text:
-            self.bot.send_message(message.chat.id, 'Use it like: /savegroup my note', reply_to_message_id=message.message_id)
-        else:
-            self.save_data(message.chat.id, obj=text)
-            self.bot.send_message(message.chat.id, 'saved', reply_to_message_id=message.message_id)
-
-    def readgroup(self, message, text):
-        note = self.read_data(message.chat.id)
-        if note is None:
-            self.bot.send_message(message.chat.id, 'no note saved', reply_to_message_id=message.message_id)
-        else:
-            self.bot.send_message(message.chat.id, 'this group note: ' + note, reply_to_message_id=message.message_id)
-
-    def prefixcmd(self, message, text):
-        self.bot.send_message(message.chat.id, text)
+from tgbot import plugintest
+from sample_plugin import TestPlugin
 
 
 class TestPluginTest(plugintest.PluginTestCase):
@@ -87,42 +9,6 @@ class TestPluginTest(plugintest.PluginTestCase):
             '',
             plugins=[self.plugin],
         )
-        self.received_id = 1
-
-    def receive_message(self, text, sender=None, chat=None, reply_to_message_id=None):
-        if sender is None:
-            sender = {
-                'id': 1,
-                'first_name': 'John',
-                'last_name': 'Doe',
-            }
-
-        if chat is None:
-            chat = {'type': 'private'}
-            chat.update(sender)
-
-        reply_to_message = None
-
-        if reply_to_message_id is not None:
-            reply_to_message = {
-                'message_id': reply_to_message_id,
-                'chat': chat,
-            }
-
-        self.bot.process_update(
-            Update.from_dict({
-                'update_id': self.received_id,
-                'message': {
-                    'message_id': self.received_id,
-                    'text': text,
-                    'chat': chat,
-                    'from': sender,
-                    'reply_to_message': reply_to_message,
-                }
-            })
-        )
-
-        self.received_id += 1
 
     def test_print_commands(self):
         from cStringIO import StringIO
@@ -139,36 +25,36 @@ readgroup - read a group note
 
     def test_reply(self):
         self.receive_message('/echo test')
-        self.assertReplied(self.bot, 'test')
+        self.assertReplied('test')
         self.receive_message('/echo sound 1 2 3')
-        self.assertReplied(self.bot, 'sound 1 2 3')
+        self.assertReplied('sound 1 2 3')
 
     def test_need_reply_user(self):
         self.receive_message('test')
-        self.assertRaises(AssertionError, self.last_reply, self.bot)
+        self.assertNoReplies()
 
         self.receive_message('/echo')
-        self.assertReplied(self.bot, 'echo what?')
+        self.assertReplied('echo what?')
 
         self.receive_message('test')
-        self.assertReplied(self.bot, 'test')
+        self.assertReplied('test')
 
-        self.clear_replies(self.bot)
         self.receive_message('sound')
-        self.assertRaises(AssertionError, self.last_reply, self.bot)
+        self.assertNoReplies()
 
     def test_need_reply_by_message_id(self):
         self.receive_message('/echo')
-        self.assertReplied(self.bot, 'echo what?')
+        self.assertReplied('echo what?')
 
-        self.clear_replies(self.bot)
+        self.clear_queues()
+
         # wrong reply id, should be ignored
-        self.receive_message('test', reply_to_message_id=2)
-        self.assertRaises(AssertionError, self.last_reply, self.bot)
+        self.receive_message('test', reply_to_message=3)
+        self.assertNoReplies()
 
         # correct reply id
-        self.receive_message('test', reply_to_message_id=1)
-        self.assertReplied(self.bot, 'test')
+        self.receive_message('test', reply_to_message=2)
+        self.assertReplied('test')
 
     def test_need_reply_group(self):
         chat = {
@@ -177,7 +63,7 @@ readgroup - read a group note
             'type': 'group',
         }
         self.receive_message('/echo', chat=chat)
-        self.assertReplied(self.bot, 'echo what?')
+        self.assertReplied('echo what?')
 
         # non-selective need_reply, should accept from any user
         self.receive_message(
@@ -189,7 +75,7 @@ readgroup - read a group note
                 'last_name': 'Doe',
             }
         )
-        self.assertReplied(self.bot, 'test')
+        self.assertReplied('test')
 
     def test_need_reply_selective_group(self):
         chat = {
@@ -199,9 +85,8 @@ readgroup - read a group note
         }
 
         self.receive_message('/echo2', chat=chat)
-        self.assertReplied(self.bot, 'echo what?')
+        self.assertReplied('echo what?')
 
-        self.clear_replies(self.bot)
         # selective need_reply, should ignore other user
         self.receive_message(
             'test',
@@ -212,33 +97,33 @@ readgroup - read a group note
                 'last_name': 'Doe',
             }
         )
-        self.assertRaises(AssertionError, self.last_reply, self.bot)
+        self.assertNoReplies()
 
         self.receive_message(
             'test',
             chat=chat,
         )
-        self.assertReplied(self.bot, 'test')
+        self.assertReplied('test')
 
     def test_plugin_data_single(self):
         self.receive_message('/save test 123')
-        self.assertReplied(self.bot, 'saved')
+        self.assertReplied('saved')
 
         self.receive_message('/read', sender={
             'id': 2,
             'first_name': 'Jane',
             'last_name': 'Doe',
         })
-        self.assertReplied(self.bot, 'no note saved')
+        self.assertReplied('no note saved')
 
         self.receive_message('/read')
-        self.assertReplied(self.bot, 'your note: test 123')
+        self.assertReplied('your note: test 123')
 
         self.receive_message('/save test 321')
-        self.assertReplied(self.bot, 'saved')
+        self.assertReplied('saved')
 
         self.receive_message('/read')
-        self.assertReplied(self.bot, 'your note: test 321')
+        self.assertReplied('your note: test 321')
 
     def test_plugin_data_group(self):
         chat = {
@@ -247,30 +132,30 @@ readgroup - read a group note
         }
 
         self.receive_message('/savegroup test 123', chat=chat)
-        self.assertReplied(self.bot, 'saved')
+        self.assertReplied('saved')
 
         self.receive_message('/readgroup')
-        self.assertReplied(self.bot, 'no note saved')
+        self.assertReplied('no note saved')
 
         self.receive_message('/readgroup', chat=chat)
-        self.assertReplied(self.bot, 'this group note: test 123')
+        self.assertReplied('this group note: test 123')
 
         self.receive_message('/readgroup', chat=chat, sender={
             'id': 2,
             'first_name': 'Jane',
             'last_name': 'Doe',
         })
-        self.assertReplied(self.bot, 'this group note: test 123')
+        self.assertReplied('this group note: test 123')
 
     def test_prefix_cmd(self):
         self.receive_message('/prefixcmd1')
-        self.assertReplied(self.bot, '1')
+        self.assertReplied('1')
 
         self.receive_message('/prefixcmd12@test_bot')
-        self.assertReplied(self.bot, '12')
+        self.assertReplied('12')
 
         self.receive_message('/prefixcmd@test_bot 123')
-        self.assertReplied(self.bot, '123')
+        self.assertReplied('123')
 
     def test_list_keys(self):
         sender2 = {

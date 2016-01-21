@@ -1,6 +1,15 @@
 v1.2.x
 ======
-* Bug fix to allow existing User instances to be updated (instead of ignored) - issue #22
+* plugintest module completely re-done
+
+Impact - only in your plugin test cases:
+* PluginTestCase().clear_replies() renamed to clear_queues()
+* PluginTestCase().assertReplied() parameters changed order
+
+v1.2.7
+======
+* Bug fix to allow existing User and GroupChat instances to be updated (instead of ignored) - issue #22
+* Bug fixes - issue #23 and #24
 * `print_commands` now lists commands in the same order they are declared in `list_commands` - issue #18
 
 v1.2.6

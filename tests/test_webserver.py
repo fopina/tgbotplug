@@ -5,7 +5,7 @@ from webtest.app import AppError
 
 class WebserverTest(plugintest.PluginTestCase):
     def setUp(self):
-        from test_plugin import TestPlugin
+        from sample_plugin import TestPlugin
         from tgbot.webserver import wsgi_app
         self.bot = self.fake_bot('123', plugins=[TestPlugin()])
         self.received_id = 1
@@ -25,10 +25,10 @@ class WebserverTest(plugintest.PluginTestCase):
 
     def test_update(self):
         self.webapp.post_json('/update/123', params=self.build_update('hello'))
-        self.assertRaises(AssertionError, self.last_reply, self.bot)
+        self.assertNoReplies()
 
         self.webapp.post_json('/update/123', params=self.build_update('/echo test'))
-        self.assertReplied(self.bot, 'test')
+        self.assertReplied('test')
 
     def build_update(self, text, sender=None, chat=None, reply_to_message_id=None):
         if sender is None:
