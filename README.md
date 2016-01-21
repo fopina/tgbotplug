@@ -15,7 +15,7 @@ tgbot.TGBot(
 ```
 
 ## Overview
-[![PyPI version](https://badge.fury.io/py/tgbotplug.svg)](https://badge.fury.io/py/tgbotplug) [![Build Status](https://travis-ci.org/fopina/tgbotplug.svg)](https://travis-ci.org/fopina/tgbotplug) [![Coverage Status](https://coveralls.io/repos/fopina/tgbotplug/badge.svg?branch=master&service=github)](https://coveralls.io/github/fopina/tgbotplug?branch=master)
+[![PyPI version](https://badge.fury.io/py/tgbotplug.svg)](https://badge.fury.io/py/tgbotplug) [![Build Status](https://travis-ci.org/fopina/tgbotplug.svg?branch=master)](https://travis-ci.org/fopina/tgbotplug) [![Coverage Status](https://coveralls.io/repos/fopina/tgbotplug/badge.svg?branch=master&service=github)](https://coveralls.io/github/fopina/tgbotplug?branch=master)
 
 1. [Documentation](#documentation)
 2. [VirtualLife Examples](#virtuallife-examples)
