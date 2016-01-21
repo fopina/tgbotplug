@@ -1,4 +1,4 @@
-v1.2.x
+v1.2.8
 ======
 * plugintest module completely re-done
 
