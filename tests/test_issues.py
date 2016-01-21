@@ -1,5 +1,5 @@
 from tgbot import plugintest
-from tgbot.botapi import Update
+from tgbot.botapi import Update, Message
 from test_plugin import TestPlugin
 
 
@@ -73,6 +73,14 @@ class IssuesTest(plugintest.PluginTestCase):
         self.received_id -= 1
         self.receive_message('/echo')
         self.assertEqual(self.bot.models.Message.select().count(), 1)
+
+    def test_need_reply_validation(self):
+        """Test need_reply validation (issue #27)"""
+        with self.assertRaisesRegexp(Exception, 'in_message must be instance of Message'):
+            self.plugin.need_reply(None, 'str')
+
+        with self.assertRaisesRegexp(Exception, 'out_message must be instance of Message'):
+            self.plugin.need_reply(None, Message.from_result({}), out_message='str')
 
     def receive_message(self, text, sender=None, chat=None, reply_to_message_id=None, left_chat_participant=None):
         if sender is None:

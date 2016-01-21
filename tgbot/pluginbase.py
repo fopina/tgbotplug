@@ -1,4 +1,5 @@
 import json
+from botapi import Message
 
 
 class TGCommandBase(object):
@@ -38,6 +39,12 @@ class TGPluginBase(object):
         raise NotImplementedError('Abstract method, inline_query plugins need to implement this method')
 
     def need_reply(self, handler, in_message, out_message=None, selective=False):
+        if not isinstance(in_message, Message):
+            raise Exception('in_message must be instance of Message')
+
+        if out_message and not isinstance(out_message, Message):
+            raise Exception('out_message must be instance of Message')
+
         sender = self.bot.models.User.get(self.bot.models.User.id == in_message.sender.id)
 
         if in_message.chat.type == "group":
