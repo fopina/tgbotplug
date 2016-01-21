@@ -48,10 +48,12 @@ class TGPluginBase(object):
         sender = self.bot.models.User.get(self.bot.models.User.id == in_message.sender.id)
 
         if in_message.chat.type == "group":
-            try:
-                chat = self.bot.models.GroupChat.get(self.bot.models.GroupChat.id == in_message.chat.id)
-            except self.bot.models.GroupChat.DoesNotExist:
-                chat = self.bot.models.GroupChat.create(id=in_message.chat.id, title=in_message.chat.title)
+            chat = self.bot.models.GroupChat.get_or_create(
+                self.bot.models.GroupChat.id == in_message.chat.id,
+                defaults={
+                    'title': in_message.chat.title
+                }
+            )
         elif in_message.chat.id == in_message.sender.id:
             chat = None
         else:
