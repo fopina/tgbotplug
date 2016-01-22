@@ -142,7 +142,7 @@ class TGPluginBase(object):
                     self.bot.models.Message.reply_plugin == self.key_name,
                 )
             except self.bot.models.Message.DoesNotExist:
-                return False
+                return None
 
         if msg is None:
             if message.chat.type == "group":
@@ -167,15 +167,13 @@ class TGPluginBase(object):
                     pass
 
         if msg is None:
-            return False
+            return None
 
         handler = getattr(self, msg.reply_method)
 
         if handler is None:
-            return False
+            return None
 
         msg.delete_instance()
 
-        handler(message, message.text)
-
-        return True
+        return handler(message, message.text)

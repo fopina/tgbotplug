@@ -77,7 +77,7 @@ class TGBot(TelegramBot):
         self.update_bot_info()
         if update.message:
             self.process_update_db(update.message)
-            self.process_message(update.message)
+            return self.process_message(update.message)
         if update.inline_query and self._inline_query is not None:
             self._inline_query.inline_query(update.inline_query)
 
@@ -120,16 +120,16 @@ class TGBot(TelegramBot):
             if spl > -1:
                 cmd = cmd[:spl]
 
-            self.process(message, cmd, text)
+            return self.process(message, cmd, text)
         else:
-            was_expected = False
+            was_expected = None
             for p in self._plugins:
                 was_expected = p.is_expected(message)
                 if was_expected:
-                    break
+                    return was_expected
 
-            if self._no_cmd is not None and not was_expected:
-                self._no_cmd.chat(message, message.text)
+            if self._no_cmd is not None:
+                return self._no_cmd.chat(message, message.text)
 
     def setup_db(self):
         database.create_tables(self.db, self.models)
@@ -164,17 +164,16 @@ class TGBot(TelegramBot):
 
     def process(self, message, cmd, text):
         if cmd in self.cmds:
-            self.cmds[cmd].method(message, text)
+            return self.cmds[cmd].method(message, text)
         elif cmd in self.pcmds:
-            self.pcmds[cmd].method(message, text)
+            return self.pcmds[cmd].method(message, text)
         else:
             for pcmd in self.pcmds:
                 if cmd.startswith(pcmd):
                     ntext = cmd[len(pcmd):]
                     if text:
                         ntext += ' ' + text
-                    self.pcmds[pcmd].method(message, ntext)
-                    break
+                    return self.pcmds[pcmd].method(message, ntext)
 
 
 def run_bots(bots, polling_time=2):
