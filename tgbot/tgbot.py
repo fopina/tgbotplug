@@ -175,8 +175,9 @@ class TGBot(TelegramBot):
                         ntext += ' ' + text
                     return self.pcmds[pcmd].method(message, ntext)
 
-    def return_message(self, chat_id, text, parse_mode=None, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, **kwargs):
-        return send_message(chat_id, text, parse_mode, disable_web_page_preview, reply_to_message_id, reply_markup, token=self.token, **kwargs)
+    def return_message(self, *args, **kwargs):
+        """See :func:`send_message`"""
+        return send_message(*args, **self._merge_overrides(**kwargs))
 
 
 def run_bots(bots, polling_time=2):
@@ -193,7 +194,9 @@ def run_bots(bots, polling_time=2):
                 print 'Error: ', ups
             else:
                 for up in ups:
-                    bot.process_update(up)
+                    x = bot.process_update(up)
+                    if isinstance(x, TelegramBotRPCRequest) and not x.thread.is_alive():
+                        x.run()
                     bot._last_id = up.update_id + 1
 
         sleep(polling_time)

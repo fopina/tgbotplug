@@ -204,6 +204,8 @@ class FakeTelegramBotRPCRequest(botapi.TelegramBotRPCRequest):
         if not self._test_bot:
             raise Exception('Did you forget to apply PluginTestCase.prepare_bot to your bot instance?')
         _original_rpc_request_.__init__(self, *args, **kwargs)
+        # run immediately as run() might not be called (when TGBot().return_* methods are used)
+        self._async_call()
 
     def _async_call(self):
         self.error = None
@@ -257,7 +259,7 @@ class FakeTelegramBotRPCRequest(botapi.TelegramBotRPCRequest):
 
     # overriding run() to prevent actual async calls to be able to assert async message sending
     def run(self):
-        self._async_call()
+        # do nothing as _async_call() was called by init
         return self
 
     # same as above

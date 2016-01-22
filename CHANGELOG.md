@@ -1,6 +1,7 @@
 v1.2.9
 ======
 * plugintest also saves sent files, for unit test asserts
+* support for webhook responses for `sendMessage` API method only: plugins methods can return `self.bot.return_message` instead of calling `self.bot.send_message` - if the call came from a webhook it will then be returned in the HTTP response body, otherwise normal API call will be issued
 
 v1.2.8
 ======

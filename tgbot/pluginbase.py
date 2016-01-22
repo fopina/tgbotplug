@@ -3,6 +3,17 @@ from botapi import Message
 
 
 class TGCommandBase(object):
+    """
+    Command methods enumerated should return None or tgbot.TGBot.return_* calls.
+
+    tgbot.TGBot.return_* methods are meant to make use of the webhook response functionality:
+     * (PRO) Save API requests
+     * (PRO) Improving message reply speed
+     * (CON) Not possible to know the result of the API call
+
+    If polling is used instead of webhooks, tgbot.TGBot.return_* calls will be automagically executed
+    as the corresponding tgbot.TGBot.send_* method.
+    """
     def __init__(self, command, method, description='', prefix=False, printable=True):
         self.command = command
         self.method = method
