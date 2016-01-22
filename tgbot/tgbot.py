@@ -175,8 +175,8 @@ class TGBot(TelegramBot):
                         ntext += ' ' + text
                     return self.pcmds[pcmd].method(message, ntext)
 
-    def return_message(chat_id, text, parse_mode=None, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, **kwargs):
-        return send_message(chat_id, text, parse_mode, disable_web_page_preview, reply_to_message_id, reply_markup, token=self.bot.token, **kwargs)
+    def return_message(self, chat_id, text, parse_mode=None, disable_web_page_preview=None, reply_to_message_id=None, reply_markup=None, **kwargs):
+        return send_message(chat_id, text, parse_mode, disable_web_page_preview, reply_to_message_id, reply_markup, token=self.token, **kwargs)
 
 
 def run_bots(bots, polling_time=2):
