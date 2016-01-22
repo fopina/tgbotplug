@@ -1,11 +1,22 @@
+#!/usr/bin/env python
 import os
 import re
+import sys
 from setuptools import setup
 
+if sys.argv[-1] == 'pub':
+    os.system('python setup.py sdist upload')
+    sys.exit()
+
+if sys.argv[-1] == 'pubtest':
+    os.system('python setup.py sdist upload -r https://testpypi.python.org/pypi')
+    sys.exit()
+
 try:
-    README = open(os.path.join(os.path.dirname(__file__), 'README.txt')).read()
-except:
-    README = ''
+    import pypandoc
+    README = pypandoc.convert(os.path.join(os.path.dirname(__file__), 'README.md'), 'rst')
+except(IOError, ImportError):
+    README = open('README.md').read()
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))

@@ -1,6 +1,0 @@
-#!/bin/bash
-
-pandoc README.md > README.txt
-python setup.py register
-python setup.py sdist upload
-rm README.txt
