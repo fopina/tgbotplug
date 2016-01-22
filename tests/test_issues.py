@@ -1,5 +1,5 @@
 from tgbot import plugintest
-from tgbot.botapi import Update, Message
+from tgbot.botapi import Message
 from sample_plugin import TestPlugin
 
 

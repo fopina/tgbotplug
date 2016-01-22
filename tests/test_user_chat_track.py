@@ -1,5 +1,4 @@
 from tgbot import plugintest
-from tgbot.botapi import Update, User
 
 
 class DBTrackTest(plugintest.PluginTestCase):
