@@ -1,3 +1,7 @@
+v1.2.9
+======
+* plugintest also saves sent files, for unit test asserts
+
 v1.2.8
 ======
 * plugintest module completely re-done

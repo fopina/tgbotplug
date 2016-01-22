@@ -1,5 +1,5 @@
 from tgbot.pluginbase import TGPluginBase, TGCommandBase
-from tgbot.tgbot import InputFileInfo, InputFile
+from tgbot.tgbot import InputFileInfo, InputFile, ChatAction
 import re
 import requests
 from cStringIO import StringIO
@@ -13,6 +13,7 @@ class RandomPhotoPlugin(TGPluginBase):
         )
 
     def photo(self, message, text):
+        self.bot.send_chat_action(message.chat.id, ChatAction.PHOTO)
         r = requests.get(
             'http://photo.net/photodb/random-photo',
             headers={'User-Agent': 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0'}
