@@ -8,7 +8,6 @@ class WebserverTest(plugintest.PluginTestCase):
         from sample_plugin import TestPlugin
         from tgbot.webserver import wsgi_app
         self.bot = self.fake_bot('123', plugins=[TestPlugin()])
-        self.received_id = 1
         self.webapp = TestApp(wsgi_app([self.bot]))
 
     def test_ping(self):
@@ -21,46 +20,11 @@ class WebserverTest(plugintest.PluginTestCase):
 
     def test_update_invalid_token(self):
         with self.assertRaisesRegexp(AppError, 'Bad response: 404 Not Found'):
-            self.webapp.post_json('/update/invalid', params=self.build_update('hello'))
+            self.webapp.post_json('/update/invalid', params=self.build_message('hello'))
 
     def test_update(self):
-        self.webapp.post_json('/update/123', params=self.build_update('hello'))
+        self.webapp.post_json('/update/123', params=self.build_message('hello'))
         self.assertNoReplies()
 
-        self.webapp.post_json('/update/123', params=self.build_update('/echo test'))
+        self.webapp.post_json('/update/123', params=self.build_message('/echo test'))
         self.assertReplied('test')
-
-    def build_update(self, text, sender=None, chat=None, reply_to_message_id=None):
-        if sender is None:
-            sender = {
-                'id': 1,
-                'first_name': 'John',
-                'last_name': 'Doe',
-            }
-
-        if chat is None:
-            chat = {'type': 'private'}
-            chat.update(sender)
-
-        reply_to_message = None
-
-        if reply_to_message_id is not None:
-            reply_to_message = {
-                'message_id': reply_to_message_id,
-                'chat': chat,
-            }
-
-        update = {
-            'update_id': self.received_id,
-            'message': {
-                'message_id': self.received_id,
-                'text': text,
-                'chat': chat,
-                'from': sender,
-                'reply_to_message': reply_to_message,
-            }
-        }
-
-        self.received_id += 1
-
-        return update

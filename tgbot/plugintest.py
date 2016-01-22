@@ -218,7 +218,7 @@ class FakeTelegramBotRPCRequest(botapi.TelegramBotRPCRequest):
             _r = self.params.pop('reply_markup', '{}')
             self.params['reply_markup'] = json.loads(_r)
 
-        self._test_bot._fake_sends.append((self.api_method, self.params))
+        self._test_bot._fake_sends.append((self.api_method, self.params, self.files))
 
         status_code, result = 200, {}
 
