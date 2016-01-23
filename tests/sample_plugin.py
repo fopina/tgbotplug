@@ -19,7 +19,7 @@ class TestPlugin(TGPluginBase):
 
     def echo_selective(self, message, text):
         if text:
-            self.bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+            return self.bot.return_message(message.chat.id, text, reply_to_message_id=message.message_id)
         else:
             m = self.bot.send_message(
                 message.chat.id,
@@ -33,7 +33,7 @@ class TestPlugin(TGPluginBase):
 
     def echo(self, message, text):
         if text:
-            self.bot.send_message(message.chat.id, text, reply_to_message_id=message.message_id)
+            return self.bot.return_message(message.chat.id, text, reply_to_message_id=message.message_id)
         else:
             m = self.bot.send_message(
                 message.chat.id,
