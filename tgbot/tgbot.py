@@ -45,12 +45,14 @@ class TGBot(TelegramBot):
                 if not isinstance(cmd, TGCommandBase):
                     raise NotImplementedError('%s does not subclass tgbot.TGCommandBase' % type(cmd).__name__)
 
-                if cmd in self.cmds or cmd in self.pcmds:
+                dup = self.cmds[cmd.command] if cmd.command in self.cmds else self.pcmds.get(cmd.command)
+
+                if dup:
                     raise Exception(
                         'Duplicate command %s: both in %s and %s' % (
                             cmd.command,
                             type(p).__name__,
-                            self.cmds.get(cmd.command) or self.pcmds.get(cmd.command),
+                            type(dup.method.im_self).__name__,
                         )
                     )
 
