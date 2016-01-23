@@ -26,11 +26,11 @@ class TGBot(TelegramBot):
             self._no_cmd.bot = self
 
         if inline_query is not None:
-            if not isinstance(no_command, TGPluginBase):
+            if not isinstance(inline_query, TGPluginBase):
                 raise NotImplementedError('%s does not subclass tgbot.TGPluginBase' % type(inline_query).__name__)
             if inline_query.bot is not None and inline_query.bot != self:
                 raise Exception('This instance of %s is already attached to other bot' % type(inline_query).__name__)
-            self._inline_query = no_command
+            self._inline_query = inline_query
             self._inline_query.bot = self
 
         for p in self._plugins:
