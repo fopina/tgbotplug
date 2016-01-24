@@ -10,8 +10,10 @@ def build_parser():
     parser.add_argument('--token', '-t', dest='token',
                         help='bot token provided by @BotFather')
     parser.add_argument('--nocommand', '-n', dest='nocmd',
-                        help='plugin.method to be used for non-command messages')
-    parser.add_argument('--polling', '-p', dest='polling', type=float, default=2,
+                        help='plugin to be used for non-command messages')
+    parser.add_argument('--inline', '-i', dest='inline',
+                        help='plugin to be used for inline queries')
+    parser.add_argument('--polling', '-p', dest='polling', type=float, default=0.5,
                         help='interval (in seconds) to check for message updates')
     parser.add_argument('--db-url', '-d', dest='db_url',
                         help='URL for database (default is in-memory sqlite)')
@@ -22,7 +24,7 @@ def build_parser():
                         const=True, default=False, help='Migrate DB tables')
     parser.add_argument('--listcommands', '-l', dest='list', action='store_const',
                         const=True, default=False,
-                        help='plugin method to be used for non-command messages (ex: plugins.simsimi.SimsimiPlugin.simsimi)')
+                        help='List available commands for this bot setup')
     parser.add_argument('--webhook', '-w', dest='webhook', nargs=2, metavar=('hook_url', 'port'),
                         help='use webhooks (instead of polling) - requires bottle')
     return parser
@@ -43,20 +45,24 @@ def main():
     args = parser.parse_args()
 
     plugins = []
+    nocmd = None
+    inline = None
 
     try:
         for plugin_name in args.plugins:
             cl = import_class(plugin_name)
             plugins.append(cl())
 
-        nocmd = None
         if args.nocmd is not None:
             cl = import_class(args.nocmd)
             nocmd = cl()
+        if args.inline is not None:
+            cl = import_class(args.inline)
+            inline = cl()
     except Exception as e:
         parser.error(e.message)
 
-    tg = TGBot(args.token, plugins=plugins, no_command=nocmd, db_url=args.db_url)
+    tg = TGBot(args.token, plugins=plugins, no_command=nocmd, db_url=args.db_url, inline_query=inline)
 
     if args.list:
         tg.print_commands()
