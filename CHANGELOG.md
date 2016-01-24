@@ -1,3 +1,7 @@
+v1.2.10
+======
+* Small bugs fixed
+
 v1.2.9
 ======
 * plugintest also saves sent files, for unit test asserts
