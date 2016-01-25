@@ -89,3 +89,12 @@ class TestPluginTest(plugintest.PluginTestCase):
         ))
         self.receive_message('niente')
         self.assertEqual(self.bot.username, 'test_bot')
+
+    def test_run_web(self):
+        self.bot = self.fake_bot('megaToken')
+        # use invalid port to stop server immediately
+        with self.assertRaisesRegexp(Exception, 'getsockaddrarg: port must be 0-65535'):
+            self.bot.run_web('http://localhost', port=99999)
+        r = self.pop_reply()
+        self.assertEqual(r[0], 'setWebhook')
+        self.assertEqual(r[1]['url'], 'http://localhost/update/megaToken')
