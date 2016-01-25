@@ -60,6 +60,8 @@ class TestPluginTest(plugintest.PluginTestCase):
         with self.assertRaisesRegexp(Exception, 'Did you forget to apply PluginTestCase.prepare_bot to your bot instance?'):
             self.receive_message('/echo 123')
         with self.assertRaisesRegexp(Exception, 'Did you forget to apply PluginTestCase.prepare_bot to your bot instance?'):
+            self.build_inline('some query')
+        with self.assertRaisesRegexp(Exception, 'Did you forget to apply PluginTestCase.prepare_bot to your bot instance?'):
             self.bot.send_message('123', 1)
 
     def test_sqlite_file_db(self):
