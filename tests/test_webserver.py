@@ -26,5 +26,13 @@ class WebserverTest(plugintest.PluginTestCase):
         self.webapp.post_json('/update/123', params=self.build_message('hello'))
         self.assertNoReplies()
 
-        self.webapp.post_json('/update/123', params=self.build_message('/echo test'))
+        # assert a reply in a separate API call
+        self.webapp.post_json('/update/123', params=self.build_message('/echo'))
+        self.assertReplied('echo what?')
+
+        # assert a reply in a webhook response
+        res = self.webapp.post_json('/update/123', params=self.build_message('test'))
+        # reply is in the HTTP reply body
+        self.assertEqual(res.body, 'text=test&method=sendMessage&chat_id=1&reply_to_message_id=4')
+        # but it was also caught by the test TelegramBotRPCRequest handler
         self.assertReplied('test')
