@@ -39,3 +39,17 @@ class GuessPluginTest(plugintest.PluginTestCase):
         self.receive_message('/guess_stop')
         self.assertReplied('Ok :(')
         self.assertIsNone(self.plugin.read_data(1))
+
+    def test_stop_on_group(self):
+        chat = {
+            'id': -1,
+            'type': 'group',
+            'title': 'Test'
+        }
+        self.receive_message('/guess_start', chat=chat)
+        self.assertReplied("I'm going to think of a number between 0 and 9 and you have to guess it! What's your guess?")
+        self.assertIsNotNone(self.plugin.read_data(-1))
+
+        self.receive_message('/guess_stop', chat=chat)
+        self.assertReplied('Ok :(')
+        self.assertIsNone(self.plugin.read_data(-1))
