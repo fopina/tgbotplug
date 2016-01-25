@@ -132,9 +132,11 @@ class PluginTestCase(unittest.TestCase):
         if not bot:
             bot = self.bot
 
-        bot.process_update(botapi.Update.from_dict(
+        upd = botapi.Update.from_dict(
             self.build_message(text, sender, chat, reply_to_message, bot, **extra)
-        ))
+        )
+        bot.process_update(upd)
+        return upd
 
     def build_inline(self, query=None, sender=None, offset=None, bot=None, **extra):
         """
@@ -193,9 +195,11 @@ class PluginTestCase(unittest.TestCase):
         if not bot:
             bot = self.bot
 
-        bot.process_update(botapi.Update.from_dict(
+        upd = botapi.Update.from_dict(
             self.build_inline(query, sender, offset, bot, **extra)
-        ))
+        )
+        bot.process_update(upd)
+        return upd
 
 
 class FakeTelegramBotRPCRequest(botapi.TelegramBotRPCRequest):
