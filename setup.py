@@ -18,8 +18,12 @@ try:
 except(IOError, ImportError):
     README = open('README.md').read()
 
+if sys.argv[-1] == 'readmerst':
+    print(README)
+    sys.exit()
+
 # allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 __version__ = ''
 with open('tgbot/__init__.py', 'r') as fd:
