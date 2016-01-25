@@ -180,7 +180,8 @@ class TGPluginBase(object):
         if msg is None:
             return None
 
-        handler = getattr(self, msg.reply_method)
+        # should always exist, but just in case DB has been tampered (or plugin was modified before an old reply was processed)
+        handler = getattr(self, msg.reply_method, None)
 
         if handler is None:
             return None
