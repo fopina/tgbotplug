@@ -79,6 +79,9 @@ class PluginTestCase(unittest.TestCase):
         if not bot:
             bot = self.bot
 
+        if 'test_bot' not in bot.request_args:
+            raise Exception('Did you forget to apply PluginTestCase.prepare_bot to your bot instance?')
+
         if sender is None:
             sender = extra.pop('from', None)  # didn't read the comment?
 
@@ -152,6 +155,9 @@ class PluginTestCase(unittest.TestCase):
 
         if not bot:
             bot = self.bot
+
+        if 'test_bot' not in bot.request_args:
+            raise Exception('Did you forget to apply PluginTestCase.prepare_bot to your bot instance?')
 
         if sender is None:
             sender = extra.pop('from', None)  # didn't read the comment?

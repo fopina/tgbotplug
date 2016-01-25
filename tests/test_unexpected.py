@@ -54,3 +54,10 @@ class TestPluginTest(plugintest.PluginTestCase):
             self.last_reply()
         with self.assertRaisesRegexp(AssertionError, 'No replies'):
             self.pop_reply()
+
+    def test_unprepared_bot(self):
+        self.bot = TGBot('', plugins=[TestPlugin()])
+        with self.assertRaisesRegexp(Exception, 'Did you forget to apply PluginTestCase.prepare_bot to your bot instance?'):
+            self.receive_message('/echo 123')
+        with self.assertRaisesRegexp(Exception, 'Did you forget to apply PluginTestCase.prepare_bot to your bot instance?'):
+            self.bot.send_message('123', 1)
