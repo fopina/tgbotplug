@@ -25,3 +25,20 @@ class TestPluginTest(plugintest.PluginTestCase):
         m.save()
         self.receive_message('hello')
         self.assertNoReplies()
+
+    def test_need_reply_outside_sender(self):
+        """
+        this is impossible(?)...
+        there cannot be a sender.id different than chat.id in a private chat...
+        but gotta cover that line!
+        TODO: revisit that code to make sure new chat.type's are covered...
+        """
+        self.bot = self.fake_bot('', plugins=[TestPlugin()])
+
+        chat = {
+            'id': 2,
+            'type': 'private',
+            'first_name': 'Ghost'
+        }
+        with self.assertRaisesRegexp(RuntimeError, 'Unexpected chat id 2'):
+            self.receive_message('/echo', chat=chat)

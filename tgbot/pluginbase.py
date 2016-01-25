@@ -68,7 +68,7 @@ class TGPluginBase(object):
         elif in_message.chat.id == in_message.sender.id:
             chat = None
         else:
-            raise RuntimeError('Unexpected chat id %s (not a GroupChat nor sender)')
+            raise RuntimeError('Unexpected chat id %s (not a GroupChat nor sender)' % in_message.chat.id)
 
         if in_message.text is None:
             return
