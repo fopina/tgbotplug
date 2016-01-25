@@ -110,6 +110,8 @@ class TestPluginTest(plugintest.PluginTestCase):
         # HACK ALERT: use invalid polling_time to only loop once...
         with self.assertRaisesRegexp(IOError, '\[Errno 22\] Invalid argument'):
             self.bot.run(polling_time=-1)
+
+        # TODO: assert Error was logged once logging is implemented
         r = self.pop_reply()
         self.assertEqual(r[0], 'getUpdates')
         self.assertEqual(r[1], {})
