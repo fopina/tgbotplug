@@ -61,3 +61,11 @@ class TestPluginTest(plugintest.PluginTestCase):
             self.receive_message('/echo 123')
         with self.assertRaisesRegexp(Exception, 'Did you forget to apply PluginTestCase.prepare_bot to your bot instance?'):
             self.bot.send_message('123', 1)
+
+    def test_sqlite_file_db(self):
+        import tempfile
+        import os
+        _, v = tempfile.mkstemp()
+        self.bot = self.fake_bot('', db_url='sqlite:///%s' % v)
+        self.bot.setup_db()
+        self.assertEqual(os.path.getsize(v), 12288)
