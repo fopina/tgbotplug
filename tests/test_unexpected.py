@@ -92,9 +92,18 @@ class TestPluginTest(plugintest.PluginTestCase):
 
     def test_run_web(self):
         self.bot = self.fake_bot('megaToken')
-        # use invalid port to stop server immediately
+        # HACK ALERT: use invalid port to stop server immediately
         with self.assertRaisesRegexp(Exception, 'getsockaddrarg: port must be 0-65535'):
             self.bot.run_web('http://localhost', port=99999)
         r = self.pop_reply()
         self.assertEqual(r[0], 'setWebhook')
         self.assertEqual(r[1]['url'], 'http://localhost/update/megaToken')
+
+    def test_run_polling(self):
+        self.bot = self.fake_bot('megaToken')
+        # HACK ALERT: use invalid polling_time to only loop once...
+        with self.assertRaisesRegexp(IOError, '\[Errno 22\] Invalid argument'):
+            self.bot.run(polling_time=-1)
+        r = self.pop_reply()
+        self.assertEqual(r[0], 'getUpdates')
+        self.assertEqual(r[1], {})

@@ -141,7 +141,7 @@ class TGBot(TelegramBot):
         database_migrations.migrate(self.db)
 
     def run(self, polling_time=2):
-        run_bots([self])
+        run_bots([self], polling_time)
 
     def run_web(self, hook_url, **kwargs):
         from .webserver import run_server
