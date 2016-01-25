@@ -1,4 +1,4 @@
-from tgbot import plugintest
+from tgbot import plugintest, TGBot
 from sample_plugin import TestPlugin
 
 
@@ -42,3 +42,8 @@ class TestPluginTest(plugintest.PluginTestCase):
         }
         with self.assertRaisesRegexp(RuntimeError, 'Unexpected chat id 2'):
             self.receive_message('/echo', chat=chat)
+
+    def test_prepare_bot(self):
+        self.bot = TGBot('123')
+        self.prepare_bot()
+        self.assertEqual(self.bot.username, 'test_bot')
