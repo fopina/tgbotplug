@@ -94,16 +94,53 @@ class TestPluginTest(plugintest.PluginTestCase):
         self.bot = self.fake_bot('megaToken')
         # HACK ALERT: use invalid port to stop server immediately
         with self.assertRaisesRegexp(Exception, 'getsockaddrarg: port must be 0-65535'):
-            self.bot.run_web('http://localhost', port=99999)
+            self.bot.run_web('http://localhost', quiet=True, port=99999)
         r = self.pop_reply()
         self.assertEqual(r[0], 'setWebhook')
         self.assertEqual(r[1]['url'], 'http://localhost/update/megaToken')
 
-    def test_run_polling(self):
+    def test_get_updates_error(self):
         self.bot = self.fake_bot('megaToken')
+
+        self.push_fake_result('API Error', status_code=400)  # push an error for testing
+        self.push_fake_result(True)  # push result for setWebhook
+
         # HACK ALERT: use invalid polling_time to only loop once...
         with self.assertRaisesRegexp(IOError, '\[Errno 22\] Invalid argument'):
             self.bot.run(polling_time=-1)
         r = self.pop_reply()
         self.assertEqual(r[0], 'getUpdates')
+        self.assertEqual(r[1], {})
+
+        r = self.pop_reply()
+        self.assertEqual(r[0], 'setWebhook')
+        self.assertEqual(r[1], {})
+
+    def test_get_updates_good(self):
+        self.bot = self.fake_bot('megaToken', plugins=[TestPlugin()])
+
+        # insert fake results in reverse order (push pop)
+        # push a list of updates for getUpdate call
+        self.push_fake_result([
+            self.build_message('/echo'),
+            self.build_message('test')
+        ])
+        # push result for setWebhook call
+        self.push_fake_result(True)
+
+        # HACK ALERT: use invalid polling_time to only loop once...
+        with self.assertRaisesRegexp(IOError, '\[Errno 22\] Invalid argument'):
+            self.bot.run(polling_time=-1)
+
+        # assert replies in reverse order (last to first)
+        self.assertReplied('test')  # reply to "test" message
+
+        self.assertReplied('echo what?')  # reply to "/echo" message
+
+        r = self.pop_reply()
+        self.assertEqual(r[0], 'getUpdates')
+        self.assertEqual(r[1], {})
+
+        r = self.pop_reply()
+        self.assertEqual(r[0], 'setWebhook')
         self.assertEqual(r[1], {})
