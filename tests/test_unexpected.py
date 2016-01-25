@@ -47,3 +47,10 @@ class TestPluginTest(plugintest.PluginTestCase):
         self.bot = TGBot('123')
         self.prepare_bot()
         self.assertEqual(self.bot.username, 'test_bot')
+
+    def test_no_replies(self):
+        self.bot = self.fake_bot('')
+        with self.assertRaisesRegexp(AssertionError, 'No replies'):
+            self.last_reply()
+        with self.assertRaisesRegexp(AssertionError, 'No replies'):
+            self.pop_reply()
