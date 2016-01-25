@@ -69,3 +69,23 @@ class TestPluginTest(plugintest.PluginTestCase):
         self.bot = self.fake_bot('', db_url='sqlite:///%s' % v)
         self.bot.setup_db()
         self.assertEqual(os.path.getsize(v), 12288)
+
+    def test_update_bot_info(self):
+        """
+        Test automatic update_bot_info
+
+        bot._bot_user is usually set by default in a test bot instance
+        remove it and then test update_bot_info by triggering it with an update
+        """
+        self.bot = self.fake_bot('')
+        self.bot._bot_user = None
+        self.assertIsNone(self.bot.username)
+
+        self.push_fake_result(dict(
+            id=9999999,
+            first_name='Test',
+            last_name='Bot',
+            username='test_bot'
+        ))
+        self.receive_message('niente')
+        self.assertEqual(self.bot.username, 'test_bot')

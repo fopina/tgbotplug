@@ -226,7 +226,7 @@ class FakeTelegramBotRPCRequest(botapi.TelegramBotRPCRequest):
             _r = self.params.pop('results', '[]')
             self.params['results'] = json.loads(_r)
 
-        if 'reply_markup' in self.params:
+        if self.params and 'reply_markup' in self.params:
             _r = self.params.pop('reply_markup', '{}')
             self.params['reply_markup'] = json.loads(_r)
 
