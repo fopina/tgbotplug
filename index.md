@@ -6,16 +6,16 @@ tgbotplug is meant to be an easy-to-extend telegram bot built around [twx.botapi
 
 Using tgbotplug, after choosing/developing your plugins, is as simple as:
 
-```
-import tgbot
-tgbot.TGBot(
-  'YOUR_BOT_TOKEN',
-  plugins=[
-    Plugin1(),
-    ...,
-    PluginN(),
-  ],
-).run()
+```python
+    import tgbot
+    tgbot.TGBot(
+      'YOUR_BOT_TOKEN',
+      plugins=[
+        Plugin1(),
+        ...,
+        PluginN(),
+      ],
+    ).run()
 ```
 
 ## Overview
