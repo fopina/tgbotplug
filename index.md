@@ -26,7 +26,7 @@ tgbot.TGBot(
 
 ## Documentation
 
-Plugins should inherit `tgbot.TGPluginBase`and implement `list_commands()` (and the methods mapped in its result).
+Plugins should inherit `tgbot.pluginbase.TGPluginBase` and implement `list_commands()` (and the methods mapped in its result).
 
 Documentation is a bit scarse (*== None*) at the moment so please focus on the [plugin examples](https://github.com/fopina/tgbotplug/tree/master/plugin_examples) and the [VirtualLife Examples](#virtuallife-examples) for now!
 
