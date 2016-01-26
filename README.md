@@ -2,6 +2,7 @@ tgbotplug is meant to be an easy-to-extend telegram bot built around [twx.botapi
 
 Using tgbotplug, after choosing/developing your plugins, is as simple as:
 
+```python
     import tgbot
     tgbot.TGBot(
       'YOUR_BOT_TOKEN',
@@ -11,6 +12,7 @@ Using tgbotplug, after choosing/developing your plugins, is as simple as:
         PluginN(),
       ],
     ).run()
+```
 
 ## Overview
 [![PyPI version](https://badge.fury.io/py/tgbotplug.svg)](https://badge.fury.io/py/tgbotplug) [![Build Status](https://travis-ci.org/fopina/tgbotplug.svg?branch=master)](https://travis-ci.org/fopina/tgbotplug) [![Coverage Status](https://coveralls.io/repos/fopina/tgbotplug/badge.svg?branch=master&service=github)](https://coveralls.io/github/fopina/tgbotplug?branch=master)
