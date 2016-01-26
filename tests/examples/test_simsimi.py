@@ -3,9 +3,6 @@ from tgbot import plugintest
 from plugin_examples.simsimi import SimsimiPlugin
 import os
 
-from requests.packages import urllib3
-urllib3.disable_warnings()
-
 
 class SimsimiPluginTest(plugintest.PluginTestCase):
     def setUp(self):

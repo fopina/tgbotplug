@@ -2,9 +2,6 @@
 from tgbot import plugintest
 from plugin_examples.google import GooglePlugin
 
-from requests.packages import urllib3
-urllib3.disable_warnings()
-
 
 class GooglePluginTest(plugintest.PluginTestCase):
     def setUp(self):

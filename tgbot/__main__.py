@@ -38,9 +38,6 @@ def import_class(cl):
 
 
 def main():
-    from requests.packages import urllib3
-    urllib3.disable_warnings()
-
     parser = build_parser()
     args = parser.parse_args()
 
