@@ -31,4 +31,5 @@ Documentation is a bit scarse (*== None*) at the moment so please focus on the [
 * [PriberamBot](http://fopina.github.io/tgbot-priberambot) - uses webhooks, inline queries, packaged for Heroku
 * [ButtieBot](http://fopina.github.io/tgbot-buttiebot) - uses webhooks, sends photos, packaged for OpenShift
 * [EuromillionsBot](http://fopina.github.io/tgbot-euromillionsbot) - uses webhooks, inline queries, packaged for OpenShift
+* [PushItBot](http://fopina.github.io/tgbot-pushitbot) - uses webhooks, extends tgbotplug Bottle app for extra routes, packaged for OpenShift
 * [IndieShuffleBot](http://pmpfl.github.io/indieshufflebot) - uses webhooks, sends audio, packaged for OpenShift
