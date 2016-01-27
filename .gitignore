@@ -1,0 +1,7 @@
+*.pyc
+/.coverage
+/.idea
+/_site
+/env
+/localrun
+/*.egg-info
