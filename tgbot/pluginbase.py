@@ -1,5 +1,8 @@
 import json
-from botapi import Message
+from .botapi import Message
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TGCommandBase(object):
@@ -51,10 +54,12 @@ class TGPluginBase(object):
 
     def need_reply(self, handler, in_message, out_message=None, selective=False):
         if not isinstance(in_message, Message):
-            raise Exception('in_message must be instance of Message')
+            logger.error('in_message must be instance of Message, discarded: %s', in_message)
+            return
 
         if out_message and not isinstance(out_message, Message):
-            raise Exception('out_message must be instance of Message')
+            logger.error('out_message must be instance of Message, discarded: %s', out_message)
+            return
 
         sender = self.bot.models.User.get(self.bot.models.User.id == in_message.sender.id)
 
@@ -68,7 +73,8 @@ class TGPluginBase(object):
         elif in_message.chat.id == in_message.sender.id:
             chat = None
         else:
-            raise RuntimeError('Unexpected chat id %s (not a GroupChat nor sender)' % in_message.chat.id)
+            logger.error('Unexpected chat id %s (not a GroupChat nor sender)', in_message.chat.id)
+            return
 
         if in_message.text is None:
             return

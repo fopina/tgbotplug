@@ -40,8 +40,11 @@ class TestPluginTest(plugintest.PluginTestCase):
             'type': 'private',
             'first_name': 'Ghost'
         }
-        with self.assertRaisesRegexp(RuntimeError, 'Unexpected chat id 2'):
+
+        import mock
+        with mock.patch('logging.Logger._log') as m:
             self.receive_message('/echo', chat=chat)
+            m.assert_called_with(40, 'Unexpected chat id %s (not a GroupChat nor sender)', (2,))
 
     def test_prepare_bot(self):
         self.bot = TGBot('123')

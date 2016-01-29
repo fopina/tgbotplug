@@ -1,5 +1,5 @@
 from bottle import Bottle, request, response, abort
-from botapi import Update, TelegramBotRPCRequest
+from .botapi import Update, TelegramBotRPCRequest
 
 
 def wsgi_app(bots):

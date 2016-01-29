@@ -17,6 +17,10 @@ from threading import Thread
 from enum import Enum
 
 import json
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 """
 Telegram Bot API Types as defined at https://core.telegram.org/bots/api#available-types
@@ -1099,6 +1103,8 @@ class TelegramBotRPCRequest:
         return Request(self.request_method, self._get_url(), data=data, files=files).prepare()
 
     def _async_call(self):
+        logger.debug('OUTGOING: method=%s params=%s files=%s', self.api_method, self.params, self.files)
+
         self.error = None
         self.response = None
 

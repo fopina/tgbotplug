@@ -75,8 +75,9 @@ class IssuesTest(plugintest.PluginTestCase):
 
     def test_need_reply_validation(self):
         """Test need_reply validation (issue #27)"""
-        with self.assertRaisesRegexp(Exception, 'in_message must be instance of Message'):
+        import mock
+        with mock.patch('logging.Logger._log') as m:
             self.plugin.need_reply(None, 'str')
-
-        with self.assertRaisesRegexp(Exception, 'out_message must be instance of Message'):
+            m.assert_called_with(40, 'in_message must be instance of Message, discarded: %s', ('str',))
             self.plugin.need_reply(None, Message.from_result({}), out_message='str')
+            m.assert_called_with(40, 'out_message must be instance of Message, discarded: %s', ('str',))

@@ -4,6 +4,9 @@ from .pluginbase import TGPluginBase, TGCommandBase
 from playhouse.db_url import connect
 from collections import OrderedDict
 import sys
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TGBot(TelegramBot):
@@ -76,6 +79,7 @@ class TGBot(TelegramBot):
             self._bot_user = self.get_me().wait()
 
     def process_update(self, update):  # noqa not complex at all!
+        logger.debug('INCOMING: %s', update)
         self.update_bot_info()
         if update.message:
             self.process_update_db(update.message)
@@ -193,7 +197,7 @@ def run_bots(bots, polling_time=2):
         for bot in bots:
             ups = bot.get_updates(offset=bot._last_id).wait()
             if isinstance(ups, Error):
-                print 'Error: ', ups
+                logger.error(ups)
             else:
                 for up in ups:
                     x = bot.process_update(up)

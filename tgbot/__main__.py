@@ -14,9 +14,9 @@ def build_parser():
     parser.add_argument('--inline', '-i', dest='inline',
                         help='plugin to be used for inline queries')
     parser.add_argument('--polling', '-p', dest='polling', type=float, default=0.5,
-                        help='interval (in seconds) to check for message updates')
+                        help='interval (in seconds) to check for message updates (default: 0.5s)')
     parser.add_argument('--db-url', '-d', dest='db_url',
-                        help='URL for database (default is in-memory sqlite)')
+                        help='URL for database (default: in-memory sqlite)')
     parser.add_argument('--create-db', dest='create_db', action='store_const',
                         const=True, default=False,
                         help='Create DB tables')
@@ -27,6 +27,8 @@ def build_parser():
                         help='List available commands for this bot setup')
     parser.add_argument('--webhook', '-w', dest='webhook', nargs=2, metavar=('hook_url', 'port'),
                         help='use webhooks (instead of polling) - requires bottle')
+    parser.add_argument('--log', dest='log', metavar='log_level',
+                        help='set log level')
     return parser
 
 
@@ -37,9 +39,28 @@ def import_class(cl):
     return getattr(m, class_name)
 
 
+def set_loglevel(loglevel):
+    import logging
+    logging.basicConfig()
+    logger = logging.getLogger(__package__)
+
+    if isinstance(loglevel, int):
+        logger.setLevel(loglevel)
+    elif isinstance(loglevel, basestring):
+        numeric_level = getattr(logging, loglevel.upper(), None)
+        if not isinstance(numeric_level, int):
+            raise ValueError('Invalid log level: %s' % loglevel)
+        logger.setLevel(numeric_level)
+    else:
+        raise ValueError('Invalid log level: %s' % loglevel)
+
+
 def main():
     parser = build_parser()
     args = parser.parse_args()
+
+    if args.log:
+        set_loglevel(args.log)
 
     plugins = []
     nocmd = None
