@@ -1094,6 +1094,8 @@ class TelegramBotRPCRequest:
                                                    method=self.api_method)
 
     def _get_request(self):
+        logger.debug('OUTGOING: method=%s params=%s files=%s', self.api_method, self.params, self.files)
+
         data, files = None, None
         if self.params is not None:
             data = self.params
@@ -1103,8 +1105,6 @@ class TelegramBotRPCRequest:
         return Request(self.request_method, self._get_url(), data=data, files=files).prepare()
 
     def _async_call(self):
-        logger.debug('OUTGOING: method=%s params=%s files=%s', self.api_method, self.params, self.files)
-
         self.error = None
         self.response = None
 

@@ -1,5 +1,9 @@
+v1.2.11
+=======
+* Make use of `logging`
+
 v1.2.10
-======
+=======
 * Small bugs fixed
 
 v1.2.9
