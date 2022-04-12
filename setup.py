@@ -59,7 +59,7 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     install_requires=[
-        'requests==2.7.0',
+        'requests==2.20.0',
         'peewee==2.8.0',
         'enum==0.4.6',
     ],
