@@ -2,7 +2,6 @@
 omit =
     tgbot/botapi.py
     tgbot/__main__.py
-[report]
 exclude_lines =
     # Have to re-enable the standard pragma
     pragma: no cover

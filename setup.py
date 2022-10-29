@@ -55,13 +55,11 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
     ],
     install_requires=[
-        'requests==2.20.0',
-        'peewee==2.8.0',
-        'enum==0.4.6',
+        'requests>=2.20,<3',
+        'peewee>=3,<4',
     ],
     keywords=['telegram', 'bot']
 )
